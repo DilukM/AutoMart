@@ -1,0 +1,20 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authRoutes = exports.authController = exports.authMiddleware = exports.authService = exports.userRepository = void 0;
+const database_1 = require("../config/database");
+const UserRepository_1 = require("./infrastructure/database/repositories/UserRepository");
+const AuthService_1 = require("./application/services/AuthService");
+const AuthMiddleware_1 = require("./infrastructure/web/middlewares/AuthMiddleware");
+const AuthController_1 = require("./presentation/controllers/AuthController");
+const authRoutes_1 = require("./presentation/routes/authRoutes");
+const userRepository = new UserRepository_1.UserRepository(database_1.AppDataSource.getRepository('UserEntity'));
+exports.userRepository = userRepository;
+const authService = new AuthService_1.AuthService(userRepository, process.env.JWT_SECRET || 'default-secret', process.env.JWT_EXPIRES_IN || '24h');
+exports.authService = authService;
+const authMiddleware = new AuthMiddleware_1.AuthMiddleware(authService);
+exports.authMiddleware = authMiddleware;
+const authController = new AuthController_1.AuthController(authService);
+exports.authController = authController;
+const authRoutes = (0, authRoutes_1.createAuthRoutes)(authController, authMiddleware);
+exports.authRoutes = authRoutes;
+//# sourceMappingURL=index.js.map
