@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_DATABASE || "automart",
-  synchronize: true,
+  synchronize: process.env.NODE_ENV === "development",
   logging: process.env.NODE_ENV === "development",
   entities: [VehicleEntity, UserEntity],
   migrations: ["src/migrations/*.ts"],
