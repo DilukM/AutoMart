@@ -154,7 +154,7 @@ const EditVehicle: React.FC = () => {
             formDataToSend.append(key, value.toString());
           }
         });
-        formData.images.forEach((image, index) => {
+        formData.images.forEach((image) => {
           formDataToSend.append("images", image);
         });
 

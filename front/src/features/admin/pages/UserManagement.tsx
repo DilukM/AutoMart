@@ -54,18 +54,6 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const handleDeleteUser = async (id: string) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      try {
-        await userService.deleteUser(id);
-        toast.success("User deleted successfully!");
-        await loadUsers();
-      } catch (error) {
-        console.error("Failed to delete user:", error);
-        toast.error("Failed to delete user");
-      }
-    }
-  };
 
   return (
     <AdminLayout>

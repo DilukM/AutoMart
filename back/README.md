@@ -25,21 +25,25 @@ A comprehensive backend API for managing vehicle sales, built with Node.js, Expr
 ## Local Development
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd backend
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Environment Setup**
+
    - Copy `.env.example` to `.env`
    - Fill in your environment variables
 
 4. **Database Setup**
+
    ```bash
    npm run seed:admin
    ```
@@ -61,6 +65,7 @@ A comprehensive backend API for managing vehicle sales, built with Node.js, Expr
 Set these environment variables in your Vercel project settings:
 
 #### Database Configuration
+
 ```
 DB_HOST=your-mysql-host
 DB_PORT=3306
@@ -70,27 +75,32 @@ DB_DATABASE=your-db-name
 ```
 
 #### JWT Configuration
+
 ```
 JWT_SECRET=your-super-secret-jwt-key
 JWT_EXPIRES_IN=24h
 ```
 
 #### AI Service Configuration
+
 ```
 AI_SERVICE=gemini  # or 'openai'
 ```
 
 #### OpenAI Configuration (if using OpenAI)
+
 ```
 OPENAI_API_KEY=your-openai-api-key
 ```
 
 #### Gemini Configuration (if using Gemini)
+
 ```
 GEMINI_API_KEY=your-gemini-api-key
 ```
 
 #### Cloudinary Configuration
+
 ```
 CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
 CLOUDINARY_API_KEY=your-cloudinary-api-key
@@ -100,17 +110,20 @@ CLOUDINARY_API_SECRET=your-cloudinary-api-secret
 ### Deployment Steps
 
 1. **Connect Repository**
+
    - Go to [vercel.com](https://vercel.com)
    - Click "New Project"
    - Import your GitHub repository
 
 2. **Configure Build Settings**
+
    - **Framework Preset**: Other
    - **Root Directory**: backend (if your backend is in a subfolder)
    - **Build Command**: npm run build
    - **Output Directory**: dist
 
 3. **Environment Variables**
+
    - Add all required environment variables in the Vercel dashboard
    - Make sure to set them for both Production and Preview environments
 
