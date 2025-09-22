@@ -2,7 +2,7 @@
   "name": "vehicle-sales-management-backend",
   "version": "1.0.0",
   "description": "Backend API for Vehicle Sales Management System",
-  "main": "dist/app.js",
+  "main": "src/app.vercel.ts",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
