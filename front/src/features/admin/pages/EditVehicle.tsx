@@ -70,7 +70,6 @@ const EditVehicle: React.FC = () => {
         description: vehicle.description,
       });
       setExistingImages(vehicle.images || []);
-      console.log("Loaded vehicle images:", vehicle.images);
     } catch (error) {
       console.error("Failed to load vehicle:", error);
       toast.error("Failed to load vehicle data");
@@ -105,12 +104,11 @@ const EditVehicle: React.FC = () => {
   };
 
   const handleImageError = (imageUrl: string) => {
-    console.log("Image failed to load:", imageUrl);
     setImageErrors((prev) => new Set([...prev, imageUrl]));
   };
 
-  const handleImageLoad = (imageUrl: string) => {
-    console.log("Image loaded successfully:", imageUrl);
+  const handleImageLoad = () => {
+    // Image loaded successfully
   };
 
   const generateAIDescription = async () => {
@@ -445,7 +443,7 @@ const EditVehicle: React.FC = () => {
                                 : "border-gray-300 dark:border-gray-600"
                             }`}
                             onError={() => handleImageError(image)}
-                            onLoad={() => handleImageLoad(image)}
+                            onLoad={() => handleImageLoad()}
                             crossOrigin="anonymous"
                           />
                         )}

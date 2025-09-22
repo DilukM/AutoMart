@@ -40,7 +40,6 @@ export class VehicleService {
         description = await this.aiService.generateVehicleDescription(
           descriptionData
         );
-        console.log("AI-generated description created for vehicle");
       } catch (error) {
         console.warn(
           "Failed to generate AI description, using default:",
@@ -178,7 +177,6 @@ export class VehicleService {
         newDescription = await this.aiService.generateVehicleDescription(
           descriptionData
         );
-        console.log("AI-generated description regenerated for vehicle");
       } catch (error) {
         console.warn("Failed to regenerate AI description:", error);
         throw new Error("Failed to regenerate vehicle description");

@@ -15,16 +15,6 @@ export class VehicleController {
     private readonly imageUploadService: ImageUploadService,
     private readonly aiService?: IAIService
   ) {
-    console.log(
-      "VehicleController created with vehicleService:",
-      !!this.vehicleService
-    );
-    console.log(
-      "VehicleController created with imageUploadService:",
-      !!this.imageUploadService
-    );
-    console.log("VehicleController created with aiService:", !!this.aiService);
-
     // Bind methods to preserve 'this' context when used as Express callbacks
     this.createVehicle = this.createVehicle.bind(this);
     this.getVehicleById = this.getVehicleById.bind(this);
@@ -36,37 +26,6 @@ export class VehicleController {
 
   async createVehicle(req: Request, res: Response): Promise<void> {
     try {
-      console.log(
-        "createVehicle called, vehicleService:",
-        !!this.vehicleService
-      );
-      console.log("Request body:", req.body);
-      console.log("Request files:", req.files);
-      console.log("Request files type:", typeof req.files);
-      console.log(
-        "Request files keys:",
-        req.files
-          ? Array.isArray(req.files)
-            ? "req.files is array"
-            : Object.keys(req.files)
-          : "req.files is null/undefined"
-      );
-
-      // Check all possible file field names
-      if (Array.isArray(req.files)) {
-        console.log(`Files array contains ${req.files.length} files`);
-      } else if (req.files) {
-        const possibleFields = ["images", "files", "photos", "pictures"];
-        for (const field of possibleFields) {
-          if (req.files[field]) {
-            console.log(`Found files in field '${field}':`, req.files[field]);
-          }
-        }
-      }
-
-      console.log("Request headers content-type:", req.headers["content-type"]);
-      console.log("Request headers:", req.headers);
-
       // Extract form data
       const {
         type,
@@ -79,26 +38,11 @@ export class VehicleController {
         description,
       } = req.body;
 
-      console.log("Extracted data:", {
-        type,
-        brand,
-        modelName,
-        color,
-        engineSize,
-        year,
-        price,
-        description,
-      });
-
       // Handle file uploads (multer format with upload.any())
       let imageUrls: string[] = [];
 
       if (req.files && Array.isArray(req.files) && req.files.length > 0) {
         // upload.any() puts files in an array
-        console.log(
-          `Found ${req.files.length} files, uploading to Cloudinary...`
-        );
-
         const uploadPromises = req.files.map((file) =>
           this.imageUploadService.uploadImage(
             file as unknown as Express.Multer.File,
@@ -106,7 +50,6 @@ export class VehicleController {
           )
         );
         imageUrls = await Promise.all(uploadPromises);
-        console.log("Images uploaded successfully:", imageUrls);
       } else if (req.files && !Array.isArray(req.files)) {
         // Fallback: check for specific field names (in case upload.any() didn't work as expected)
         const possibleFields = ["images", "files", "photos", "pictures"];
@@ -115,9 +58,6 @@ export class VehicleController {
           if (req.files[field]) {
             const files = req.files[field];
             const fileArray = Array.isArray(files) ? files : [files];
-            console.log(
-              `Found ${fileArray.length} files in field '${field}', uploading to Cloudinary...`
-            );
 
             const uploadPromises = fileArray.map((file) =>
               this.imageUploadService.uploadImage(
@@ -126,17 +66,13 @@ export class VehicleController {
               )
             );
             imageUrls = await Promise.all(uploadPromises);
-            console.log("Images uploaded successfully:", imageUrls);
             break; // Use the first field that has files
           }
         }
-      } else {
-        console.log("No files found in request");
       }
 
       // Validate that at least one image is provided
       if (imageUrls.length === 0) {
-        console.log("No images provided, returning error");
         res.status(400).json({
           success: false,
           error: "At least one image file is required",
@@ -144,7 +80,6 @@ export class VehicleController {
         return;
       }
 
-      console.log("Creating vehicle data object");
       // Create vehicle data object
       const vehicleData: CreateVehicleDTO = {
         type: type as VehicleType,
@@ -158,14 +93,9 @@ export class VehicleController {
         description,
       };
 
-      console.log("Vehicle data to create:", vehicleData);
-      console.log("Calling vehicleService.createVehicle");
-
       const vehicle = await this.vehicleService.createVehicle(
         vehicleData as any
       );
-
-      console.log("Vehicle created successfully:", vehicle.id);
 
       res.status(201).json({
         success: true,

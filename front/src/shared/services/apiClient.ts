@@ -46,16 +46,11 @@ class ApiClient {
 
   // Auth endpoints
   async login(data: LoginRequest): Promise<LoginResponse> {
-    console.log("ApiClient login called with:", data);
-    console.log("BASE_URL:", BASE_URL);
-    console.log("Making request to:", `${BASE_URL}/api/auth/login`);
-
     try {
       const response: AxiosResponse<any> = await this.client.post(
         "/api/auth/login",
         data
       );
-      console.log("ApiClient login response:", response.data);
 
       // Extract the actual login data from the nested response
       const loginData = response.data.data || response.data;
@@ -71,11 +66,9 @@ class ApiClient {
 
       // Try alternative endpoints if the first one fails
       if (error.response?.status === 404) {
-        console.log("Trying alternative endpoint: /auth/login");
         try {
           const altResponse: AxiosResponse<LoginResponse> =
             await this.client.post("/auth/login", data);
-          console.log("Alternative endpoint response:", altResponse.data);
           return altResponse.data;
         } catch (altError: any) {
           console.error(
@@ -84,14 +77,9 @@ class ApiClient {
           );
         }
 
-        console.log("Trying another alternative endpoint: /login");
         try {
           const altResponse2: AxiosResponse<LoginResponse> =
             await this.client.post("/login", data);
-          console.log(
-            "Second alternative endpoint response:",
-            altResponse2.data
-          );
           return altResponse2.data;
         } catch (altError2: any) {
           console.error(

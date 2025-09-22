@@ -32,12 +32,11 @@ const VehicleDetails: React.FC = () => {
   };
 
   const handleImageError = (imageUrl: string) => {
-    console.log("Image failed to load:", imageUrl);
     setImageErrors((prev) => new Set([...prev, imageUrl]));
   };
 
-  const handleImageLoad = (imageUrl: string) => {
-    console.log("Image loaded successfully:", imageUrl);
+  const handleImageLoad = () => {
+    // Image loaded successfully
   };
 
   if (loading) {
@@ -136,7 +135,7 @@ const VehicleDetails: React.FC = () => {
                       alt={`${vehicle.brand} ${vehicle.modelName}`}
                       className="w-full h-full object-cover"
                       onError={() => handleImageError(vehicle.images[selectedImageIndex])}
-                      onLoad={() => handleImageLoad(vehicle.images[selectedImageIndex])}
+                      onLoad={() => handleImageLoad()}
                       crossOrigin="anonymous"
                     />
                   )}
@@ -159,7 +158,7 @@ const VehicleDetails: React.FC = () => {
                           alt={`Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover bg-gray-100 dark:bg-gray-800"
                           onError={() => handleImageError(image)}
-                          onLoad={() => handleImageLoad(image)}
+                          onLoad={() => handleImageLoad()}
                           crossOrigin="anonymous"
                         />
                       </button>

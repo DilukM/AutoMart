@@ -70,12 +70,8 @@ const AddNewVehicle: React.FC = () => {
         price: formData.price,
       });
 
-      console.log("API Response:", response); // Debug log
-
       // Extract description from response.description as confirmed by user
       const description = response?.data.description || "";
-
-      console.log("Extracted description:", description); // Debug log
 
       if (description) {
         setFormData((prev) => ({ ...prev, description }));
@@ -94,8 +90,6 @@ const AddNewVehicle: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting vehicle form");
-    console.log("Number of images in formData:", formData.images.length);
     try {
       const formDataToSend = new FormData();
       formDataToSend.append("type", formData.type);
@@ -106,19 +100,9 @@ const AddNewVehicle: React.FC = () => {
       formDataToSend.append("year", formData.year.toString());
       formDataToSend.append("price", formData.price.toString());
       formDataToSend.append("description", formData.description);
-      formData.images.forEach((image, index) => {
-        console.log(`Appending image ${index + 1}:`, image.name, image.size);
+      formData.images.forEach((image) => {
         formDataToSend.append("images", image);
       });
-
-      console.log("FormData entries:");
-      for (const [key, value] of formDataToSend.entries()) {
-        if (value instanceof File) {
-          console.log(`${key}: File(${value.name}, ${value.size} bytes)`);
-        } else {
-          console.log(`${key}: ${value}`);
-        }
-      }
 
       await vehicleService.createVehicle(formDataToSend);
       toast.success("Vehicle added successfully!");

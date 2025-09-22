@@ -17,9 +17,7 @@ const LoginPage: React.FC = () => {
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
-    console.log("LoginPage useEffect - isAuthenticated:", isAuthenticated);
     if (isAuthenticated) {
-      console.log("Redirecting to /admin");
       navigate("/admin", { replace: true });
     }
   }, [isAuthenticated, navigate]);
@@ -30,11 +28,7 @@ const LoginPage: React.FC = () => {
     setLoading(true);
 
     try {
-      console.log("LoginPage handleSubmit - calling login");
       await login(credentials);
-      console.log(
-        "LoginPage handleSubmit - login successful, navigating to /admin"
-      );
       navigate("/admin", { replace: true });
     } catch (err: any) {
       console.error("LoginPage handleSubmit - login failed:", err);

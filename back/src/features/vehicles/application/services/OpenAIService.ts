@@ -9,51 +9,32 @@ export class OpenAIService implements IAIService {
 
   constructor() {
     const apiKey = process.env.OPENAI_API_KEY;
-    console.log("OpenAIService constructor called");
-    console.log("OPENAI_API_KEY exists:", !!apiKey);
-    console.log("OPENAI_API_KEY length:", apiKey ? apiKey.length : 0);
     if (!apiKey) {
       throw new Error("OpenAI API key not found in environment variables");
     }
     this.openAIClient = new OpenAIClient(apiKey);
-    console.log("OpenAIService initialized successfully");
   }
 
   async generateVehicleDescription(
     vehicleData: VehicleDescriptionData
   ): Promise<string> {
     try {
-      console.log(
-        "OpenAIService: Starting to generate description for:",
-        vehicleData
-      );
-
       // Convert VehicleType enum to string for the prompt
       const vehicleDataForPrompt = {
         ...vehicleData,
         type: vehicleData.type.toString(),
       };
 
-      console.log(
-        "OpenAIService: Calling OpenAI client with data:",
-        vehicleDataForPrompt
-      );
-
       const description = await this.openAIClient.generateVehicleDescription(
         vehicleDataForPrompt
       );
 
-      console.log(
-        "OpenAIService: Successfully generated description from OpenAI:",
-        description.substring(0, 100) + "..."
-      );
       return description;
     } catch (error) {
       console.error(
         "OpenAIService: Error generating vehicle description with OpenAI:",
         error
       );
-      console.log("OpenAIService: Falling back to predefined description");
 
       // Fallback description if OpenAI fails
       return this.generateFallbackDescription(vehicleData);

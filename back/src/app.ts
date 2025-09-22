@@ -79,11 +79,8 @@ app.use(errorHandler);
 
 // Initialize database and start server
 const startServer = async () => {
-  console.log("🚀 startServer function called");
   try {
-    console.log("Starting server initialization...");
     await initializeDatabase();
-    console.log("Database initialized successfully");
 
     // Get repositories from DataSource
     const userRepository = new UserRepository(
@@ -92,7 +89,6 @@ const startServer = async () => {
     const vehicleRepository = new VehicleRepository(
       AppDataSource.getRepository(VehicleEntity)
     );
-    console.log("Repositories created");
 
     // Validate required JWT environment variables
     if (!process.env.JWT_SECRET) {
@@ -115,21 +111,15 @@ const startServer = async () => {
 
     if (aiServiceType === "gemini" && process.env.GEMINI_API_KEY) {
       aiService = new GeminiService();
-      console.log("Using Gemini AI service");
     } else if (aiServiceType === "openai" && process.env.OPENAI_API_KEY) {
       aiService = new OpenAIService();
-      console.log("Using OpenAI service");
     } else if (process.env.OPENAI_API_KEY) {
       // Fallback to OpenAI if no AI_SERVICE specified but OPENAI_API_KEY exists
       aiService = new OpenAIService();
-      console.log("Using OpenAI service (fallback)");
-    } else {
-      console.log("No AI service configured");
     }
 
     const vehicleService = new VehicleService(vehicleRepository, aiService);
     const imageUploadService = new ImageUploadService();
-    console.log("Services created");
 
     // Create controllers
     const authController = new AuthController(authService);
@@ -138,7 +128,6 @@ const startServer = async () => {
       imageUploadService,
       aiService
     );
-    console.log("Controllers created");
 
     // Create middleware
     const authMiddleware = new AuthMiddleware(authService);
@@ -146,12 +135,10 @@ const startServer = async () => {
     // Create route routers
     const authRouter = authRoutes(authController, authMiddleware);
     const vehicleRouter = vehicleRoutes(vehicleController, authMiddleware);
-    console.log("Routes created");
 
     // Use routers
     app.use("/api/auth", authRouter);
     app.use("/api/vehicles", vehicleRouter);
-    console.log("Routes registered");
 
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);

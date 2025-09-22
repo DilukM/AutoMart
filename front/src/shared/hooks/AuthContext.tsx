@@ -52,17 +52,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (credentials: LoginRequest) => {
     try {
-      console.log("AuthContext login called with:", credentials);
       const response = await apiClient.login(credentials);
-      console.log("Login API response:", response);
 
       // Handle different possible response structures
       const responseData = response as any; // Type assertion for flexibility
       const token = responseData.token || responseData.accessToken;
       const user = responseData.user;
-
-      console.log("AuthContext login - extracted token:", token);
-      console.log("AuthContext login - extracted user:", user);
 
       if (!token || !user) {
         throw new Error("Invalid response structure from login API");
@@ -70,10 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       localStorage.setItem("authToken", token);
       localStorage.setItem("user", JSON.stringify(user));
-      console.log("AuthContext login - setting user state:", user);
       setUser(user);
-      console.log("AuthContext login - user state updated successfully");
-      console.log("User state set, isAuthenticated should be true");
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -93,8 +85,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     loading,
   };
-
-  console.log("AuthContext render - user:", user, "isAuthenticated:", !!user);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

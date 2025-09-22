@@ -27,19 +27,6 @@ class VehicleService {
   }
 
   async createVehicle(vehicle: CreateVehicleRequest | FormData): Promise<Vehicle> {
-    console.log("VehicleService: Creating vehicle");
-    if (vehicle instanceof FormData) {
-      console.log("Sending FormData:");
-      for (const [key, value] of vehicle.entries()) {
-        if (value instanceof File) {
-          console.log(`${key}: File(${value.name}, ${value.size} bytes)`);
-        } else {
-          console.log(`${key}: ${value}`);
-        }
-      }
-    } else {
-      console.log("Sending JSON data:", vehicle);
-    }
     return apiClient.post<Vehicle>("/api/vehicles", vehicle);
   }
 

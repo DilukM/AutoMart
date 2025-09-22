@@ -6,39 +6,29 @@ export class GeminiService implements IAIService {
 
   constructor() {
     const apiKey = process.env.GEMINI_API_KEY;
-    console.log("GeminiService constructor called");
-    console.log("GEMINI_API_KEY exists:", !!apiKey);
-    console.log("GEMINI_API_KEY length:", apiKey ? apiKey.length : 0);
     if (!apiKey) {
       throw new Error('Gemini API key not found in environment variables');
     }
     this.geminiClient = new GeminiClient(apiKey);
-    console.log("GeminiService initialized successfully");
   }
 
   async generateVehicleDescription(
     vehicleData: VehicleDescriptionData
   ): Promise<string> {
     try {
-      console.log('GeminiService: Starting to generate description for:', vehicleData);
-
       // Convert VehicleType enum to string for the prompt
       const vehicleDataForPrompt = {
         ...vehicleData,
         type: vehicleData.type.toString(),
       };
 
-      console.log('GeminiService: Calling Gemini client with data:', vehicleDataForPrompt);
-
       const description = await this.geminiClient.generateVehicleDescription(
         vehicleDataForPrompt
       );
 
-      console.log('GeminiService: Successfully generated description from Gemini:', description.substring(0, 100) + '...');
       return description;
     } catch (error) {
       console.error("GeminiService: Error generating vehicle description with Gemini:", error);
-      console.log("GeminiService: Falling back to predefined description");
 
       // Fallback description if Gemini fails
       return this.generateFallbackDescription(vehicleData);
