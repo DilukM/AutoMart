@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { User } from '../../domain/entities/User';
-import { IUserRepository } from '../../domain/repositories/IUserRepository';
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { User } from "../../domain/entities/User";
+import { IUserRepository } from "../../domain/repositories/IUserRepository";
 
 export interface LoginCredentials {
   username: string;
@@ -34,13 +34,16 @@ export class AuthService {
     const user = await this.userRepository.findByUsername(credentials.username);
 
     if (!user) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
 
-    const isPasswordValid = await this.verifyPassword(credentials.password, user.passwordHash);
+    const isPasswordValid = await this.verifyPassword(
+      credentials.password,
+      user.passwordHash
+    );
 
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      throw new Error("Invalid credentials");
     }
 
     const accessToken = this.generateAccessToken(user);
@@ -49,16 +52,18 @@ export class AuthService {
       accessToken,
       user: {
         id: user.id,
-        username: user.username
-      }
+        username: user.username,
+      },
     };
   }
 
   async register(credentials: LoginCredentials): Promise<User> {
-    const existingUser = await this.userRepository.findByUsername(credentials.username);
+    const existingUser = await this.userRepository.findByUsername(
+      credentials.username
+    );
 
     if (existingUser) {
-      throw new Error('Username already exists');
+      throw new Error("Username already exists");
     }
 
     const passwordHash = await this.hashPassword(credentials.password);
@@ -67,7 +72,7 @@ export class AuthService {
 
     return await this.userRepository.create({
       username: user.username,
-      passwordHash: user.passwordHash
+      passwordHash: user.passwordHash,
     });
   }
 
@@ -80,19 +85,19 @@ export class AuthService {
       const decoded = jwt.verify(token, this.jwtSecret) as JWTPayload;
       return decoded;
     } catch (error) {
-      throw new Error('Invalid token');
+      throw new Error("Invalid token");
     }
   }
 
   private generateAccessToken(user: User): string {
     const payload: JWTPayload = {
       userId: user.id,
-      username: user.username
+      username: user.username,
     };
 
     return jwt.sign(payload, this.jwtSecret, {
-      expiresIn: this.jwtExpiresIn
-    });
+      expiresIn: this.jwtExpiresIn,
+    } as any);
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -100,7 +105,10 @@ export class AuthService {
     return await bcrypt.hash(password, saltRounds);
   }
 
-  private async verifyPassword(password: string, hash: string): Promise<boolean> {
+  private async verifyPassword(
+    password: string,
+    hash: string
+  ): Promise<boolean> {
     return await bcrypt.compare(password, hash);
   }
 }
