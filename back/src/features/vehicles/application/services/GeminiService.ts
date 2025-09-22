@@ -7,7 +7,7 @@ export class GeminiService implements IAIService {
   constructor() {
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      throw new Error('Gemini API key not found in environment variables');
+      throw new Error("Gemini API key not found in environment variables");
     }
     this.geminiClient = new GeminiClient(apiKey);
   }
@@ -28,7 +28,10 @@ export class GeminiService implements IAIService {
 
       return description;
     } catch (error) {
-      console.error("GeminiService: Error generating vehicle description with Gemini:", error);
+      console.error(
+        "GeminiService: Error generating vehicle description with Gemini:",
+        error
+      );
 
       // Fallback description if Gemini fails
       return this.generateFallbackDescription(vehicleData);
