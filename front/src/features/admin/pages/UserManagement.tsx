@@ -122,37 +122,53 @@ const UserManagement: React.FC = () => {
         {showAddForm && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
             className={`${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl p-6 shadow-xl ${getColorClasses.border.default} border`}
           >
-            <h2 className={`text-xl font-bold ${getColorClasses.text.primary} mb-4`}>
+            <h2
+              className={`text-xl font-bold ${getColorClasses.text.primary} mb-4`}
+            >
               Add New User
             </h2>
             <form onSubmit={handleAddUser} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.primary} mb-2`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.primary} mb-2`}
+                  >
                     Username
                   </label>
                   <input
                     type="text"
                     value={newUser.username}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, username: e.target.value }))}
+                    onChange={(e) =>
+                      setNewUser((prev) => ({
+                        ...prev,
+                        username: e.target.value,
+                      }))
+                    }
                     className={`w-full px-4 py-3 rounded-xl ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300`}
                     placeholder="Enter username"
                     required
                   />
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.primary} mb-2`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.primary} mb-2`}
+                  >
                     Password
                   </label>
                   <input
                     type="password"
                     value={newUser.password}
-                    onChange={(e) => setNewUser(prev => ({ ...prev, password: e.target.value }))}
+                    onChange={(e) =>
+                      setNewUser((prev) => ({
+                        ...prev,
+                        password: e.target.value,
+                      }))
+                    }
                     className={`w-full px-4 py-3 rounded-xl ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300`}
                     placeholder="Enter password"
                     required
@@ -223,11 +239,6 @@ const UserManagement: React.FC = () => {
                     >
                       Last Updated
                     </th>
-                    <th
-                      className={`px-6 py-4 text-center text-sm font-semibold ${getColorClasses.text.primary} uppercase tracking-wider`}
-                    >
-                      Actions
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
@@ -276,27 +287,6 @@ const UserManagement: React.FC = () => {
                         className={`px-6 py-4 whitespace-nowrap text-sm ${getColorClasses.text.secondary}`}
                       >
                         {new Date(user.updatedAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
-                        <button
-                          onClick={() => handleDeleteUser(user.id)}
-                          className={`${getColorClasses.status.error} hover:opacity-80 font-medium flex items-center space-x-1 px-3 py-2 rounded-lg transition-all duration-200 hover:bg-red-100 dark:hover:bg-red-900/20 mx-auto`}
-                        >
-                          <svg
-                            className="w-4 h-4"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                          <span>Delete</span>
-                        </button>
                       </td>
                     </motion.tr>
                   ))}

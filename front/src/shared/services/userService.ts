@@ -7,7 +7,7 @@ import {
 
 class UserService {
   async getUsers(): Promise<User[]> {
-    const response = await apiClient.get<any>("/api/auth");
+    const response = await apiClient.get<any>("/api/auth/users");
     return response.data || response.users || [];
   }
 
