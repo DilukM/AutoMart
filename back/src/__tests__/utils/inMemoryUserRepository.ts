@@ -1,5 +1,9 @@
-import { IUserRepository, CreateUserData, UpdateUserData } from '@/features/auth/domain/repositories/IUserRepository';
-import { User } from '@/features/auth/domain/entities/User';
+import {
+  IUserRepository,
+  CreateUserData,
+  UpdateUserData,
+} from "@/features/auth/domain/repositories/IUserRepository";
+import { User } from "@/features/auth/domain/entities/User";
 
 export class InMemoryUserRepository implements IUserRepository {
   private users: Map<string, User> = new Map();

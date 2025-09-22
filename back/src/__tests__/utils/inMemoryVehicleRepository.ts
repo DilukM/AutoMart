@@ -1,5 +1,11 @@
-import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchFilters, VehicleSearchResult } from '@/features/vehicles/domain/repositories/IVehicleRepository';
-import { Vehicle } from '@/features/vehicles/domain/entities/Vehicle';
+import {
+  IVehicleRepository,
+  CreateVehicleData,
+  UpdateVehicleData,
+  VehicleSearchFilters,
+  VehicleSearchResult,
+} from "@/features/vehicles/domain/repositories/IVehicleRepository";
+import { Vehicle } from "@/features/vehicles/domain/entities/Vehicle";
 
 export class InMemoryVehicleRepository implements IVehicleRepository {
   private vehicles: Map<string, Vehicle> = new Map();
@@ -24,9 +30,13 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
     return this.vehicles.get(id) ?? null;
   }
 
-  async findAll(filters: VehicleSearchFilters = {}, page = 1, limit = 10): Promise<VehicleSearchResult> {
+  async findAll(
+    filters: VehicleSearchFilters = {},
+    page = 1,
+    limit = 10
+  ): Promise<VehicleSearchResult> {
     let list = Array.from(this.vehicles.values());
-    list = list.filter(v => {
+    list = list.filter((v) => {
       return (
         (filters.type ? v.type === filters.type : true) &&
         (filters.brand ? v.brand === filters.brand : true) &&
