@@ -15,16 +15,16 @@ export const vehicleRoutes = (
     storage: storage,
     limits: {
       fileSize: 5 * 1024 * 1024, // 5MB limit per file
-      files: 10 // Maximum 10 files
+      files: 10, // Maximum 10 files
     },
     fileFilter: (req, file, cb) => {
       // Accept only image files
-      if (file.mimetype.startsWith('image/')) {
+      if (file.mimetype.startsWith("image/")) {
         cb(null, true);
       } else {
-        cb(new Error('Only image files are allowed'));
+        cb(new Error("Only image files are allowed"));
       }
-    }
+    },
   });
 
   /**
@@ -454,10 +454,7 @@ export const vehicleRoutes = (
    *             schema:
    *               $ref: '#/components/schemas/ErrorResponse'
    */
-  router.post(
-    "/generate-description",
-    vehicleController.generateDescription
-  );
+  router.post("/generate-description", vehicleController.generateDescription);
 
   return router;
 };

@@ -1,6 +1,6 @@
-import { v2 as cloudinary } from 'cloudinary';
-import { UploadApiResponse } from 'cloudinary';
-import { UploadedFile } from 'express-fileupload';
+import { v2 as cloudinary } from "cloudinary";
+import { UploadApiResponse } from "cloudinary";
+import { UploadedFile } from "express-fileupload";
 
 export class ImageUploadService {
   constructor() {
@@ -9,7 +9,9 @@ export class ImageUploadService {
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
     if (!cloudName || !apiKey || !apiSecret) {
-      throw new Error('Cloudinary configuration is missing required environment variables');
+      throw new Error(
+        "Cloudinary configuration is missing required environment variables"
+      );
     }
 
     cloudinary.config({
@@ -19,13 +21,16 @@ export class ImageUploadService {
     });
   }
 
-  async uploadImage(file: Express.Multer.File, folder: string = 'automart'): Promise<string> {
+  async uploadImage(
+    file: Express.Multer.File,
+    folder: string = "automart"
+  ): Promise<string> {
     try {
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: folder,
-            resource_type: 'auto',
+            resource_type: "auto",
             public_id: `${Date.now()}-${file.originalname}`,
           },
           (error, result) => {
@@ -34,7 +39,7 @@ export class ImageUploadService {
             } else if (result) {
               resolve(result);
             } else {
-              reject(new Error('Upload failed: No result returned'));
+              reject(new Error("Upload failed: No result returned"));
             }
           }
         );
@@ -44,28 +49,36 @@ export class ImageUploadService {
 
       return result.secure_url;
     } catch (error) {
-      console.error('Error uploading image to Cloudinary:', error);
-      throw new Error('Failed to upload image');
+      console.error("Error uploading image to Cloudinary:", error);
+      throw new Error("Failed to upload image");
     }
   }
 
-  async uploadMultipleImages(files: UploadedFile[], folder: string = 'automart'): Promise<string[]> {
+  async uploadMultipleImages(
+    files: UploadedFile[],
+    folder: string = "automart"
+  ): Promise<string[]> {
     try {
-      const uploadPromises = files.map(file => this.uploadImageFromFileUpload(file, folder));
+      const uploadPromises = files.map((file) =>
+        this.uploadImageFromFileUpload(file, folder)
+      );
       return await Promise.all(uploadPromises);
     } catch (error) {
-      console.error('Error uploading multiple images to Cloudinary:', error);
-      throw new Error('Failed to upload images');
+      console.error("Error uploading multiple images to Cloudinary:", error);
+      throw new Error("Failed to upload images");
     }
   }
 
-  async uploadImageFromFileUpload(file: UploadedFile, folder: string = 'automart'): Promise<string> {
+  async uploadImageFromFileUpload(
+    file: UploadedFile,
+    folder: string = "automart"
+  ): Promise<string> {
     try {
       const result: UploadApiResponse = await new Promise((resolve, reject) => {
         const uploadStream = cloudinary.uploader.upload_stream(
           {
             folder: folder,
-            resource_type: 'auto',
+            resource_type: "auto",
             public_id: `${Date.now()}-${file.name}`,
           },
           (error, result) => {
@@ -74,7 +87,7 @@ export class ImageUploadService {
             } else if (result) {
               resolve(result);
             } else {
-              reject(new Error('Upload failed: No result returned'));
+              reject(new Error("Upload failed: No result returned"));
             }
           }
         );
@@ -84,8 +97,8 @@ export class ImageUploadService {
 
       return result.secure_url;
     } catch (error) {
-      console.error('Error uploading image to Cloudinary:', error);
-      throw new Error('Failed to upload image');
+      console.error("Error uploading image to Cloudinary:", error);
+      throw new Error("Failed to upload image");
     }
   }
 
@@ -93,8 +106,8 @@ export class ImageUploadService {
     try {
       await cloudinary.uploader.destroy(publicId);
     } catch (error) {
-      console.error('Error deleting image from Cloudinary:', error);
-      throw new Error('Failed to delete image');
+      console.error("Error deleting image from Cloudinary:", error);
+      throw new Error("Failed to delete image");
     }
   }
 }

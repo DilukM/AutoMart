@@ -56,7 +56,7 @@ export class VehicleController {
       if (Array.isArray(req.files)) {
         console.log(`Files array contains ${req.files.length} files`);
       } else if (req.files) {
-        const possibleFields = ['images', 'files', 'photos', 'pictures'];
+        const possibleFields = ["images", "files", "photos", "pictures"];
         for (const field of possibleFields) {
           if (req.files[field]) {
             console.log(`Found files in field '${field}':`, req.files[field]);
@@ -95,7 +95,9 @@ export class VehicleController {
 
       if (req.files && Array.isArray(req.files) && req.files.length > 0) {
         // upload.any() puts files in an array
-        console.log(`Found ${req.files.length} files, uploading to Cloudinary...`);
+        console.log(
+          `Found ${req.files.length} files, uploading to Cloudinary...`
+        );
 
         const uploadPromises = req.files.map((file) =>
           this.imageUploadService.uploadImage(
@@ -107,13 +109,15 @@ export class VehicleController {
         console.log("Images uploaded successfully:", imageUrls);
       } else if (req.files && !Array.isArray(req.files)) {
         // Fallback: check for specific field names (in case upload.any() didn't work as expected)
-        const possibleFields = ['images', 'files', 'photos', 'pictures'];
+        const possibleFields = ["images", "files", "photos", "pictures"];
 
         for (const field of possibleFields) {
           if (req.files[field]) {
             const files = req.files[field];
             const fileArray = Array.isArray(files) ? files : [files];
-            console.log(`Found ${fileArray.length} files in field '${field}', uploading to Cloudinary...`);
+            console.log(
+              `Found ${fileArray.length} files in field '${field}', uploading to Cloudinary...`
+            );
 
             const uploadPromises = fileArray.map((file) =>
               this.imageUploadService.uploadImage(

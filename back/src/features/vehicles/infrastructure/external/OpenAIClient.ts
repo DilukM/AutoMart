@@ -1,4 +1,4 @@
-import OpenAI from 'openai';
+import OpenAI from "openai";
 
 export class OpenAIClient {
   private client: OpenAI;
@@ -19,40 +19,47 @@ export class OpenAIClient {
     price: number;
   }): Promise<string> {
     try {
-      console.log('OpenAIClient: Building prompt for vehicle data:', vehicleData);
+      console.log(
+        "OpenAIClient: Building prompt for vehicle data:",
+        vehicleData
+      );
       const prompt = this.buildDescriptionPrompt(vehicleData);
-      console.log('OpenAIClient: Generated prompt:', prompt.substring(0, 200) + '...');
+      console.log(
+        "OpenAIClient: Generated prompt:",
+        prompt.substring(0, 200) + "..."
+      );
 
-      console.log('OpenAIClient: Making API call to OpenAI...');
+      console.log("OpenAIClient: Making API call to OpenAI...");
       const response = await this.client.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: "gpt-3.5-turbo",
         messages: [
           {
-            role: 'system',
-            content: 'You are a professional car salesperson. Create engaging, persuasive vehicle descriptions that highlight key features and appeal to potential buyers. Keep descriptions between 100-200 words.'
+            role: "system",
+            content:
+              "You are a professional car salesperson. Create engaging, persuasive vehicle descriptions that highlight key features and appeal to potential buyers. Keep descriptions between 100-200 words.",
           },
           {
-            role: 'user',
-            content: prompt
-          }
+            role: "user",
+            content: prompt,
+          },
         ],
         max_tokens: 300,
         temperature: 0.7,
       });
 
-      console.log('OpenAIClient: Received response from OpenAI');
+      console.log("OpenAIClient: Received response from OpenAI");
       const description = response.choices[0]?.message?.content?.trim();
 
       if (!description) {
-        console.error('OpenAIClient: No description in response');
-        throw new Error('Failed to generate description from OpenAI');
+        console.error("OpenAIClient: No description in response");
+        throw new Error("Failed to generate description from OpenAI");
       }
 
-      console.log('OpenAIClient: Successfully extracted description');
+      console.log("OpenAIClient: Successfully extracted description");
       return description;
     } catch (error) {
-      console.error('OpenAIClient: API error:', error);
-      throw new Error('Failed to generate vehicle description');
+      console.error("OpenAIClient: API error:", error);
+      throw new Error("Failed to generate vehicle description");
     }
   }
 

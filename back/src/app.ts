@@ -104,10 +104,10 @@ const startServer = async () => {
     let aiService: IAIService | undefined;
     const aiServiceType = process.env.AI_SERVICE?.toLowerCase();
 
-    if (aiServiceType === 'gemini' && process.env.GEMINI_API_KEY) {
+    if (aiServiceType === "gemini" && process.env.GEMINI_API_KEY) {
       aiService = new GeminiService();
       console.log("Using Gemini AI service");
-    } else if (aiServiceType === 'openai' && process.env.OPENAI_API_KEY) {
+    } else if (aiServiceType === "openai" && process.env.OPENAI_API_KEY) {
       aiService = new OpenAIService();
       console.log("Using OpenAI service");
     } else if (process.env.OPENAI_API_KEY) {
