@@ -20,6 +20,7 @@ import Settings from "./features/admin/pages/Settings";
 import Home from "./features/consumer/pages/Home";
 import ConsumerVehicleDetails from "./features/consumer/pages/VehicleDetails";
 
+
 const AppRoutes: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
