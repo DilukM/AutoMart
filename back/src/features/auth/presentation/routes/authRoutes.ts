@@ -106,5 +106,52 @@ export const authRoutes = (
     authController.getProfile
   );
 
+  /**
+   * @swagger
+   * /api/auth/users:
+   *   get:
+   *     summary: Get all users
+   *     description: Get a list of all registered users (requires authentication)
+   *     tags: [Authentication]
+   *     security:
+   *       - bearerAuth: []
+   *     responses:
+   *       200:
+   *         description: Users retrieved successfully
+   *         content:
+   *           application/json:
+   *             schema:
+   *               type: object
+   *               properties:
+   *                 success:
+   *                   type: boolean
+   *                 data:
+   *                   type: array
+   *                   items:
+   *                     type: object
+   *                     properties:
+   *                       id:
+   *                         type: string
+   *                       username:
+   *                         type: string
+   *                       createdAt:
+   *                         type: string
+   *                         format: date-time
+   *                       updatedAt:
+   *                         type: string
+   *                         format: date-time
+   *       401:
+   *         description: Unauthorized
+   *         content:
+   *           application/json:
+   *             schema:
+   *               $ref: '#/components/schemas/ErrorResponse'
+   */
+  router.get(
+    "/users",
+    authMiddleware.authenticate,
+    authController.getAllUsers
+  );
+
   return router;
 };

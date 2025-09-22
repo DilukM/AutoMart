@@ -71,6 +71,10 @@ export class AuthService {
     });
   }
 
+  async getAllUsers(): Promise<User[]> {
+    return await this.userRepository.findAll();
+  }
+
   async verifyToken(token: string): Promise<JWTPayload> {
     try {
       const decoded = jwt.verify(token, this.jwtSecret) as JWTPayload;

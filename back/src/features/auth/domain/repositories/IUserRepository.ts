@@ -13,6 +13,7 @@ export interface IUserRepository {
   create(userData: CreateUserData): Promise<User>;
   findById(id: string): Promise<User | null>;
   findByUsername(username: string): Promise<User | null>;
+  findAll(): Promise<User[]>;
   update(id: string, userData: UpdateUserData): Promise<User | null>;
   delete(id: string): Promise<boolean>;
   exists(id: string): Promise<boolean>;

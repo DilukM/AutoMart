@@ -41,6 +41,11 @@ export class UserRepository implements IUserRepository {
     return count > 0;
   }
 
+  async findAll(): Promise<User[]> {
+    const userEntities = await this.userRepository.find();
+    return userEntities.map(entity => this.mapEntityToDomain(entity));
+  }
+
   async existsByUsername(username: string): Promise<boolean> {
     const count = await this.userRepository.count({ where: { username } });
     return count > 0;

@@ -1,10 +1,14 @@
 import { apiClient } from "./apiClient";
-import { type User, type LoginRequest, type LoginResponse } from "../types/common";
+import {
+  type User,
+  type LoginRequest,
+  type LoginResponse,
+} from "../types/common";
 
 class UserService {
   async getUsers(): Promise<User[]> {
     const response = await apiClient.get<any>("/api/auth");
-    return response.data?.users || response.users || [];
+    return response.data || response.users || [];
   }
 
   async registerUser(userData: LoginRequest): Promise<User> {

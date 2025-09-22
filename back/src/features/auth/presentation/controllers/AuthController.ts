@@ -79,4 +79,25 @@ export class AuthController {
       });
     }
   };
+
+  getAllUsers = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const users = await this.authService.getAllUsers();
+
+      res.status(200).json({
+        success: true,
+        data: users.map(user => ({
+          id: user.id,
+          username: user.username,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
+        }))
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        error: 'Failed to get users'
+      });
+    }
+  };
 }

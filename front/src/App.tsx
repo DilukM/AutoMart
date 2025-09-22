@@ -13,6 +13,7 @@ import LoginPage from "./features/auth/pages/LoginPage";
 import Dashboard from "./features/admin/pages/Dashboard";
 import VehicleManagement from "./features/admin/pages/VehicleManagement";
 import VehicleDetails from "./features/admin/pages/VehicleDetails";
+import UserManagement from "./features/admin/pages/UserManagement";
 import EditVehicle from "./features/admin/pages/EditVehicle";
 import AddNewVehicle from "./features/admin/pages/AddNewVehicle";
 import Settings from "./features/admin/pages/Settings";
@@ -35,6 +36,7 @@ const AppRoutes: React.FC = () => {
               <Route path="/vehicles/:id" element={<VehicleDetails />} />
               <Route path="/vehicles/:id/edit" element={<EditVehicle />} />
               <Route path="/vehicles/add" element={<AddNewVehicle />} />
+              <Route path="/users" element={<UserManagement />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </ProtectedRoute>
