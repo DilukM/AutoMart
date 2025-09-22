@@ -8,7 +8,7 @@ jest.mock("@/config/database", () => ({
 
 // Import the Vercel app which defines /health without needing DB
 // Use relative path here to avoid IDE path-alias squiggles in tests (excluded by tsconfig)
-import app from "../../app.vercel";
+import app from "../..";
 
 describe("Health API", () => {
   it("GET /health returns OK", async () => {

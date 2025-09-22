@@ -8,6 +8,11 @@ const buildSslOptions = () => {
 
   const ssl: any = { rejectUnauthorized: true };
 
+  // Allow disabling certificate verification for self-signed certificates
+  if (process.env.DB_SSL_REJECT_UNAUTHORIZED === "false") {
+    ssl.rejectUnauthorized = false;
+  }
+
   // Normalize PEM strings that may contain escaped newlines
   const normalize = (s: string) => s.replace(/\\n/g, "\n");
 
@@ -36,8 +41,6 @@ export const createDataSource = () => {
     );
   }
 
-  const ssl = buildSslOptions();
-
   return new DataSource({
     type: "mysql",
     host: process.env.DB_HOST!,
@@ -50,8 +53,6 @@ export const createDataSource = () => {
     entities: [VehicleEntity, UserEntity],
     migrations: ["src/migrations/*.ts"],
     subscribers: ["src/subscribers/*.ts"],
-    // Pass SSL options to the mysql2 driver when enabled
-    extra: ssl ? { ssl } : undefined,
   });
 };
 

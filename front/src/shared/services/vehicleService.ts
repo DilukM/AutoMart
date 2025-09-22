@@ -3,11 +3,14 @@ import {
   type Vehicle,
   type CreateVehicleRequest,
   type UpdateVehicleRequest,
-  type VehicleFilters,
+  type PaginatedVehiclesResponse,
+  type VehicleApiFilters,
 } from "../types/common";
 
 class VehicleService {
-  async getVehicles(filters?: VehicleFilters): Promise<Vehicle[]> {
+  async getVehicles(
+    filters?: VehicleApiFilters
+  ): Promise<PaginatedVehiclesResponse> {
     const params = new URLSearchParams();
     if (filters) {
       Object.entries(filters).forEach(([key, value]) => {
@@ -18,7 +21,22 @@ class VehicleService {
     }
     const query = params.toString() ? `?${params.toString()}` : "";
     const response = await apiClient.get<any>(`/api/vehicles${query}`);
-    return response.data?.vehicles || response.vehicles || [];
+
+    // Debug logging to see the actual response structure
+   
+    // API response format: { success: true, data: [...], pagination: {...} }
+    // Try different possible structures
+    const vehicles = response.data?.vehicles || response.data || [];
+    const pagination = response.data?.pagination || response.data || {};
+
+   
+    return {
+      vehicles: Array.isArray(vehicles) ? vehicles : [],
+      total: pagination?.total || 0,
+      page: pagination?.page || 1,
+      limit: pagination?.limit || 10,
+      totalPages: pagination?.totalPages || 0,
+    };
   }
 
   async getVehicleById(id: string): Promise<Vehicle> {
@@ -39,12 +57,6 @@ class VehicleService {
 
   async deleteVehicle(id: string): Promise<void> {
     return apiClient.delete(`/api/vehicles/${id}`);
-  }
-
-  async regenerateDescription(id: string): Promise<Vehicle> {
-    return apiClient.post<Vehicle>(
-      `/api/vehicles/${id}/regenerate-description`
-    );
   }
 
   async generateDescription(vehicleData: {

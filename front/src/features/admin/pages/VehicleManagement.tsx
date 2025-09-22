@@ -2,37 +2,62 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { vehicleService } from "../../../shared/services/vehicleService";
-import { type Vehicle, type VehicleType } from "../../../shared/types/common";
+import {
+  type VehicleType,
+  type PaginatedVehiclesResponse,
+  type VehicleApiFilters,
+} from "../../../shared/types/common";
 import AdminLayout from "../../../shared/components/AdminLayout";
 import { getColorClasses } from "../../../shared/styles/colors";
 
 const VehicleManagement: React.FC = () => {
-  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [vehiclesData, setVehiclesData] = useState<PaginatedVehiclesResponse>({
+    vehicles: [],
+    total: 0,
+    page: 1,
+    limit: 10,
+    totalPages: 0,
+  });
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filters, setFilters] = useState({
-    type: "" as VehicleType | "",
-    brand: "",
-    modelName: "",
-    color: "",
-    engineSize: "",
-    yearMin: "",
-    yearMax: "",
-    priceMin: "",
-    priceMax: "",
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [filters, setFilters] = useState<VehicleApiFilters>({
+    type: undefined,
+    brand: undefined,
+    modelName: undefined,
+    color: undefined,
+    engineSize: undefined,
+    yearMin: undefined,
+    yearMax: undefined,
+    priceMin: undefined,
+    priceMax: undefined,
   });
 
   useEffect(() => {
     loadVehicles();
-  }, []);
+  }, [page, limit, filters]);
 
   const loadVehicles = async () => {
     try {
-      const data = await vehicleService.getVehicles();
-      setVehicles(data);
+      const apiFilters: VehicleApiFilters = {
+        page,
+        limit,
+        ...filters,
+      };
+      const data = await vehicleService.getVehicles(apiFilters);
+      setVehiclesData(data);
+    
     } catch (error) {
       console.error("Failed to load vehicles:", error);
+      // Reset to empty state on error
+      setVehiclesData({
+        vehicles: [],
+        total: 0,
+        page: 1,
+        limit: 10,
+        totalPages: 0,
+      });
     } finally {
       setLoading(false);
     }
@@ -49,64 +74,19 @@ const VehicleManagement: React.FC = () => {
     }
   };
 
-  const filteredVehicles = vehicles.filter((vehicle) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      vehicle.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicle.modelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      vehicle.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesType = filters.type === "" || vehicle.type === filters.type;
-    const matchesBrand =
-      filters.brand === "" ||
-      vehicle.brand.toLowerCase().includes(filters.brand.toLowerCase());
-    const matchesModel =
-      filters.modelName === "" ||
-      vehicle.modelName.toLowerCase().includes(filters.modelName.toLowerCase());
-    const matchesColor =
-      filters.color === "" ||
-      vehicle.color.toLowerCase().includes(filters.color.toLowerCase());
-    const matchesEngine =
-      filters.engineSize === "" ||
-      vehicle.engineSize
-        .toLowerCase()
-        .includes(filters.engineSize.toLowerCase());
-    const matchesYearMin =
-      filters.yearMin === "" || vehicle.year >= parseInt(filters.yearMin);
-    const matchesYearMax =
-      filters.yearMax === "" || vehicle.year <= parseInt(filters.yearMax);
-    const matchesPriceMin =
-      filters.priceMin === "" || vehicle.price >= parseInt(filters.priceMin);
-    const matchesPriceMax =
-      filters.priceMax === "" || vehicle.price <= parseInt(filters.priceMax);
-
-    return (
-      matchesSearch &&
-      matchesType &&
-      matchesBrand &&
-      matchesModel &&
-      matchesColor &&
-      matchesEngine &&
-      matchesYearMin &&
-      matchesYearMax &&
-      matchesPriceMin &&
-      matchesPriceMax
-    );
-  });
-
   const clearFilters = () => {
     setFilters({
-      type: "",
-      brand: "",
-      modelName: "",
-      color: "",
-      engineSize: "",
-      yearMin: "",
-      yearMax: "",
-      priceMin: "",
-      priceMax: "",
+      type: undefined,
+      brand: undefined,
+      modelName: undefined,
+      color: undefined,
+      engineSize: undefined,
+      yearMin: undefined,
+      yearMax: undefined,
+      priceMin: undefined,
+      priceMax: undefined,
     });
-    setSearchQuery("");
+    setPage(1);
   };
 
   return (
@@ -194,8 +174,8 @@ const VehicleManagement: React.FC = () => {
             </div>
           </motion.button>
           <span className={`text-sm ${getColorClasses.text.secondary}`}>
-            {filteredVehicles.length} vehicle
-            {filteredVehicles.length !== 1 ? "s" : ""} found
+            {vehiclesData.total} vehicle
+            {vehiclesData.total !== 1 ? "s" : ""} found
           </span>
         </motion.div>
 
@@ -208,29 +188,19 @@ const VehicleManagement: React.FC = () => {
             transition={{ duration: 0.3 }}
             className={`${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl p-6 shadow-xl ${getColorClasses.border.default} border mb-6`}
           >
-            <div className="flex flex-col lg:flex-row gap-6">
-              {/* Search Bar */}
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Search vehicles by brand, model, or description..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full px-4 py-3 rounded-xl ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300`}
-                />
-              </div>
-            </div>
-
             {/* Filter Inputs */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
               <select
-                value={filters.type}
-                onChange={(e) =>
+                value={filters.type || ""}
+                onChange={(e) => {
                   setFilters((prev) => ({
                     ...prev,
-                    type: e.target.value as VehicleType,
-                  }))
-                }
+                    type: e.target.value
+                      ? (e.target.value as VehicleType)
+                      : undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               >
                 <option value="">All Types</option>
@@ -246,92 +216,122 @@ const VehicleManagement: React.FC = () => {
               <input
                 type="text"
                 placeholder="Brand"
-                value={filters.brand}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, brand: e.target.value }))
-                }
+                value={filters.brand || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    brand: e.target.value || undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
+                className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
+              />
+
+              <input
+                type="number"
+                placeholder="Min Price"
+                value={filters.priceMin || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    priceMin: e.target.value
+                      ? parseFloat(e.target.value)
+                      : undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
+                className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
+              />
+
+              <input
+                type="number"
+                placeholder="Max Price"
+                value={filters.priceMax || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    priceMax: e.target.value
+                      ? parseFloat(e.target.value)
+                      : undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
 
               <input
                 type="text"
                 placeholder="Model"
-                value={filters.modelName}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, modelName: e.target.value }))
-                }
+                value={filters.modelName || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    modelName: e.target.value || undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
 
               <input
                 type="text"
                 placeholder="Color"
-                value={filters.color}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, color: e.target.value }))
-                }
+                value={filters.color || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    color: e.target.value || undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
 
               <input
                 type="text"
                 placeholder="Engine Size"
-                value={filters.engineSize}
-                onChange={(e) =>
+                value={filters.engineSize || ""}
+                onChange={(e) => {
                   setFilters((prev) => ({
                     ...prev,
-                    engineSize: e.target.value,
-                  }))
-                }
+                    engineSize: e.target.value || undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
 
               <input
                 type="number"
                 placeholder="Min Year"
-                value={filters.yearMin}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, yearMin: e.target.value }))
-                }
+                value={filters.yearMin || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    yearMin: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  }));
+                  setPage(1); 
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
 
               <input
                 type="number"
                 placeholder="Max Year"
-                value={filters.yearMax}
-                onChange={(e) =>
-                  setFilters((prev) => ({ ...prev, yearMax: e.target.value }))
-                }
+                value={filters.yearMax || ""}
+                onChange={(e) => {
+                  setFilters((prev) => ({
+                    ...prev,
+                    yearMax: e.target.value
+                      ? parseInt(e.target.value)
+                      : undefined,
+                  }));
+                  setPage(1); // Reset to first page when filter changes
+                }}
                 className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
-
-              <div className="space-y-2">
-                <input
-                  type="number"
-                  placeholder="Min Price"
-                  value={filters.priceMin}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      priceMin: e.target.value,
-                    }))
-                  }
-                  className={`w-full px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
-                />
-                <input
-                  type="number"
-                  placeholder="Max Price"
-                  value={filters.priceMax}
-                  onChange={(e) =>
-                    setFilters((prev) => ({
-                      ...prev,
-                      priceMax: e.target.value,
-                    }))
-                  }
-                  className={`w-full px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
-                />
-              </div>
             </div>
 
             <div className="flex justify-end mt-4">
@@ -364,7 +364,7 @@ const VehicleManagement: React.FC = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="space-y-4 h-full overflow-y-auto"
               >
-                {filteredVehicles.map((vehicle, index) => (
+                {vehiclesData.vehicles.map((vehicle, index) => (
                   <motion.div
                     key={vehicle.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -516,7 +516,7 @@ const VehicleManagement: React.FC = () => {
                   </motion.div>
                 ))}
 
-                {filteredVehicles.length === 0 && (
+                {vehiclesData.vehicles.length === 0 && (
                   <div className="text-center py-12">
                     <svg
                       className={`mx-auto h-12 w-12 ${getColorClasses.text.muted} mb-4`}
@@ -595,7 +595,7 @@ const VehicleManagement: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                    {filteredVehicles.map((vehicle, index) => (
+                    {vehiclesData.vehicles.map((vehicle, index) => (
                       <motion.tr
                         key={vehicle.id}
                         initial={{ opacity: 0, y: 20 }}
@@ -732,7 +732,7 @@ const VehicleManagement: React.FC = () => {
                 </table>
               </div>
 
-              {filteredVehicles.length === 0 && (
+              {vehiclesData.vehicles.length === 0 && (
                 <div className="text-center py-12">
                   <svg
                     className={`mx-auto h-12 w-12 ${getColorClasses.text.muted} mb-4`}
@@ -759,6 +759,167 @@ const VehicleManagement: React.FC = () => {
               )}
             </motion.div>
           </>
+        )}
+
+        {/* Pagination */}
+        {vehiclesData.totalPages > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className={`${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl p-4 shadow-xl ${getColorClasses.border.default} border mt-6`}
+          >
+            <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm ${getColorClasses.text.secondary}`}>
+                    Items per page:
+                  </span>
+                  <select
+                    value={limit}
+                    onChange={(e) => {
+                      setLimit(parseInt(e.target.value));
+                      setPage(1);
+                    }}
+                    className={`px-2 py-1 rounded ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 text-sm`}
+                  >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                  </select>
+                </div>
+
+                {/* Jump to page */}
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm ${getColorClasses.text.secondary}`}>
+                    Go to page:
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    max={vehiclesData.totalPages}
+                    value={page}
+                    onChange={(e) => {
+                      const newPage = parseInt(e.target.value);
+                      if (newPage >= 1 && newPage <= vehiclesData.totalPages) {
+                        setPage(newPage);
+                      }
+                    }}
+                    className={`w-16 px-2 py-1 text-center rounded ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 text-sm`}
+                  />
+                  <span className={`text-sm ${getColorClasses.text.secondary}`}>
+                    of {vehiclesData.totalPages}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className={`text-sm ${getColorClasses.text.secondary}`}>
+                  Page {vehiclesData.page} of {vehiclesData.totalPages} (
+                  {vehiclesData.total} total)
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-1">
+                <button
+                  onClick={() => setPage(1)}
+                  disabled={page === 1}
+                  className={`px-2 sm:px-3 py-1 rounded ${getColorClasses.button.secondary} text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  First
+                </button>
+                <button
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 1}
+                  className={`px-2 sm:px-3 py-1 rounded ${getColorClasses.button.secondary} text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  ‹ Prev
+                </button>
+
+                {/* Page number buttons */}
+                <div className="flex items-center gap-1">
+                  {(() => {
+                    const pages = [];
+                    const startPage = Math.max(1, page - 2);
+                    const endPage = Math.min(vehiclesData.totalPages, page + 2);
+
+                    // Add ellipsis for large page ranges
+                    if (startPage > 1) {
+                      pages.push(
+                        <button
+                          key={1}
+                          onClick={() => setPage(1)}
+                          className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${getColorClasses.button.secondary} hover:opacity-80`}
+                        >
+                          1
+                        </button>
+                      );
+                      if (startPage > 2) {
+                        pages.push(
+                          <span key="start-ellipsis" className={`px-2 py-1 text-xs sm:text-sm ${getColorClasses.text.secondary}`}>
+                            ...
+                          </span>
+                        );
+                      }
+                    }
+
+                    for (let i = startPage; i <= endPage; i++) {
+                      pages.push(
+                        <button
+                          key={i}
+                          onClick={() => setPage(i)}
+                          className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${
+                            i === page
+                              ? `${getColorClasses.button.primary} text-white`
+                              : `${getColorClasses.button.secondary} hover:opacity-80`
+                          }`}
+                        >
+                          {i}
+                        </button>
+                      );
+                    }
+
+                    if (endPage < vehiclesData.totalPages) {
+                      if (endPage < vehiclesData.totalPages - 1) {
+                        pages.push(
+                          <span key="end-ellipsis" className={`px-2 py-1 text-xs sm:text-sm ${getColorClasses.text.secondary}`}>
+                            ...
+                          </span>
+                        );
+                      }
+                      pages.push(
+                        <button
+                          key={vehiclesData.totalPages}
+                          onClick={() => setPage(vehiclesData.totalPages)}
+                          className={`px-2 sm:px-3 py-1 rounded text-xs sm:text-sm ${getColorClasses.button.secondary} hover:opacity-80`}
+                        >
+                          {vehiclesData.totalPages}
+                        </button>
+                      );
+                    }
+
+                    return pages;
+                  })()}
+                </div>
+
+                <button
+                  onClick={() => setPage(page + 1)}
+                  disabled={page === vehiclesData.totalPages}
+                  className={`px-2 sm:px-3 py-1 rounded ${getColorClasses.button.secondary} text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  Next ›
+                </button>
+                <button
+                  onClick={() => setPage(vehiclesData.totalPages)}
+                  disabled={page === vehiclesData.totalPages}
+                  className={`px-2 sm:px-3 py-1 rounded ${getColorClasses.button.secondary} text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  Last
+                </button>
+              </div>
+            </div>
+          </motion.div>
         )}
       </motion.div>
     </AdminLayout>

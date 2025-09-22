@@ -11,7 +11,6 @@ yarn-error.log*
 src/app.local.ts
 
 # Build outputs
-dist/
 build/
 
 # IDE files

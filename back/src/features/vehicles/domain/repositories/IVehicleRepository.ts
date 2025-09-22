@@ -32,6 +32,8 @@ export interface VehicleSearchFilters {
   color?: string;
   engineSize?: string;
   year?: number;
+  yearMin?: number;
+  yearMax?: number;
   minPrice?: number;
   maxPrice?: number;
 }

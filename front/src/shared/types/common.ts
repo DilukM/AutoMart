@@ -60,3 +60,25 @@ export interface VehicleFilters {
   priceMin?: number;
   priceMax?: number;
 }
+
+export interface PaginatedVehiclesResponse {
+  vehicles: Vehicle[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface VehicleApiFilters {
+  page?: number;
+  limit?: number;
+  type?: VehicleType;
+  brand?: string;
+  modelName?: string;
+  color?: string;
+  engineSize?: string;
+  yearMin?: number;
+  yearMax?: number;
+  priceMin?: number;
+  priceMax?: number;
+}

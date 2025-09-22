@@ -173,7 +173,8 @@ export class VehicleController {
         modelName,
         color,
         engineSize,
-        year,
+        yearMin,
+        yearMax,
         minPrice,
         maxPrice,
         page = "1",
@@ -186,7 +187,8 @@ export class VehicleController {
       if (modelName) filters.modelName = modelName as string;
       if (color) filters.color = color as string;
       if (engineSize) filters.engineSize = engineSize as string;
-      if (year) filters.year = parseInt(year as string);
+      if (yearMin) filters.yearMin = parseInt(yearMin as string);  
+      if (yearMax) filters.yearMax = parseInt(yearMax as string); 
       if (minPrice) filters.minPrice = parseFloat(minPrice as string);
       if (maxPrice) filters.maxPrice = parseFloat(maxPrice as string);
 

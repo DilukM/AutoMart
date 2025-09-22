@@ -60,6 +60,16 @@ export class VehicleRepository implements IVehicleRepository {
       if (filters.year) {
         queryBuilder.andWhere("vehicle.year = :year", { year: filters.year });
       }
+      if (filters.yearMin) {
+        queryBuilder.andWhere("vehicle.year >= :yearMin", {
+          yearMin: filters.yearMin,
+        });
+      }
+      if (filters.yearMax) {
+        queryBuilder.andWhere("vehicle.year <= :yearMax", {
+          yearMax: filters.yearMax,
+        });
+      }
       if (filters.minPrice) {
         queryBuilder.andWhere("vehicle.price >= :minPrice", {
           minPrice: filters.minPrice,
