@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import { AppDataSource } from '../config/database';
-import { UserEntity } from '../auth/infrastructure/database/entities/UserEntity';
+import { UserEntity } from '../features/auth/infrastructure/database/entities/UserEntity';
 
 // Load environment variables
 dotenv.config();

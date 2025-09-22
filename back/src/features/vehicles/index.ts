@@ -15,7 +15,7 @@ const vehicleRepository = new VehicleRepository(AppDataSource.getRepository(Vehi
 let openAIService: OpenAIService | undefined;
 const openaiApiKey = process.env.OPENAI_API_KEY;
 if (openaiApiKey) {
-  openAIService = new OpenAIService(openaiApiKey);
+  openAIService = new OpenAIService();
 }
 
 // Initialize services
