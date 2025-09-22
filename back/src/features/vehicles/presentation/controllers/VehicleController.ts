@@ -167,7 +167,6 @@ export class VehicleController {
 
   async getAllVehicles(req: Request, res: Response): Promise<void> {
     try {
- 
       const {
         type,
         brand,
@@ -245,8 +244,6 @@ export class VehicleController {
         return;
       }
 
-
-
       // Get the existing vehicle data first
       const existingVehicle = await this.vehicleService.getVehicleById(id);
 
@@ -311,7 +308,6 @@ export class VehicleController {
 
       // Remove imagesToRemove from the data sent to service (it's not part of the entity)
       delete vehicleData.imagesToRemove;
-
 
       const vehicle = await this.vehicleService.updateVehicle(id, vehicleData);
 
@@ -379,8 +375,6 @@ export class VehicleController {
 
   async generateDescription(req: Request, res: Response): Promise<void> {
     try {
-   
-
       // Extract vehicle details from request body
       const { type, brand, modelName, color, engineSize, year, price } =
         req.body;
@@ -395,11 +389,8 @@ export class VehicleController {
         return;
       }
 
-
-
       // Check if AI service is available
       if (!this.aiService || !this.aiService.isConfigured()) {
-
         if (this.aiService) {
         }
         res.status(503).json({
@@ -420,12 +411,9 @@ export class VehicleController {
         price: parseFloat(price),
       };
 
-
-
       // Generate description using AI service
       const generatedDescription =
         await this.aiService.generateVehicleDescription(descriptionData);
-
 
       res.status(200).json({
         success: true,
