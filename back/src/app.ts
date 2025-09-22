@@ -1,7 +1,11 @@
+import dotenv from "dotenv";
+
+// Load environment variables FIRST
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
-import dotenv from "dotenv";
 import swaggerUi from "swagger-ui-express";
 import { initializeDatabase, AppDataSource } from "./config/database";
 import { swaggerSpec } from "./config/swagger";
@@ -22,11 +26,8 @@ import { VehicleRepository } from "./features/vehicles/infrastructure/database/r
 import { UserEntity } from "./features/auth/infrastructure/database/entities/UserEntity";
 import { VehicleEntity } from "./features/vehicles/infrastructure/database/entities/VehicleEntity";
 
-// Load environment variables
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 
 // Middleware
 app.use(helmet());
@@ -93,11 +94,19 @@ const startServer = async () => {
     );
     console.log("Repositories created");
 
+    // Validate required JWT environment variables
+    if (!process.env.JWT_SECRET) {
+      throw new Error("Missing required environment variable: JWT_SECRET");
+    }
+    if (!process.env.JWT_EXPIRES_IN) {
+      throw new Error("Missing required environment variable: JWT_EXPIRES_IN");
+    }
+
     // Create services
     const authService = new AuthService(
       userRepository,
-      process.env.JWT_SECRET || "default-secret",
-      process.env.JWT_EXPIRES_IN || "24h"
+      process.env.JWT_SECRET,
+      process.env.JWT_EXPIRES_IN
     );
 
     // Initialize AI service based on configuration
@@ -169,3 +178,4 @@ process.on("uncaughtException", (err: Error) => {
 startServer();
 
 export default app;
+

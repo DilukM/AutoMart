@@ -8,18 +8,18 @@ import { type Vehicle, type VehicleType } from "../../../shared/types/common";
 const Home: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
-    type: '' as VehicleType | '',
-    brand: '',
-    modelName: '',
-    color: '',
-    engineSize: '',
-    yearMin: '',
-    yearMax: '',
-    priceMin: '',
-    priceMax: '',
+    type: "" as VehicleType | "",
+    brand: "",
+    modelName: "",
+    color: "",
+    engineSize: "",
+    yearMin: "",
+    yearMax: "",
+    priceMin: "",
+    priceMax: "",
   });
 
   useEffect(() => {
@@ -37,39 +37,64 @@ const Home: React.FC = () => {
     }
   };
 
-  const filteredVehicles = vehicles.filter(vehicle => {
-    const matchesSearch = searchQuery === '' ||
+  const filteredVehicles = vehicles.filter((vehicle) => {
+    const matchesSearch =
+      searchQuery === "" ||
       vehicle.brand.toLowerCase().includes(searchQuery.toLowerCase()) ||
       vehicle.modelName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       vehicle.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesType = filters.type === '' || vehicle.type === filters.type;
-    const matchesBrand = filters.brand === '' || vehicle.brand.toLowerCase().includes(filters.brand.toLowerCase());
-    const matchesModel = filters.modelName === '' || vehicle.modelName.toLowerCase().includes(filters.modelName.toLowerCase());
-    const matchesColor = filters.color === '' || vehicle.color.toLowerCase().includes(filters.color.toLowerCase());
-    const matchesEngine = filters.engineSize === '' || vehicle.engineSize.toLowerCase().includes(filters.engineSize.toLowerCase());
-    const matchesYearMin = filters.yearMin === '' || vehicle.year >= parseInt(filters.yearMin);
-    const matchesYearMax = filters.yearMax === '' || vehicle.year <= parseInt(filters.yearMax);
-    const matchesPriceMin = filters.priceMin === '' || vehicle.price >= parseInt(filters.priceMin);
-    const matchesPriceMax = filters.priceMax === '' || vehicle.price <= parseInt(filters.priceMax);
+    const matchesType = filters.type === "" || vehicle.type === filters.type;
+    const matchesBrand =
+      filters.brand === "" ||
+      vehicle.brand.toLowerCase().includes(filters.brand.toLowerCase());
+    const matchesModel =
+      filters.modelName === "" ||
+      vehicle.modelName.toLowerCase().includes(filters.modelName.toLowerCase());
+    const matchesColor =
+      filters.color === "" ||
+      vehicle.color.toLowerCase().includes(filters.color.toLowerCase());
+    const matchesEngine =
+      filters.engineSize === "" ||
+      vehicle.engineSize
+        .toLowerCase()
+        .includes(filters.engineSize.toLowerCase());
+    const matchesYearMin =
+      filters.yearMin === "" || vehicle.year >= parseInt(filters.yearMin);
+    const matchesYearMax =
+      filters.yearMax === "" || vehicle.year <= parseInt(filters.yearMax);
+    const matchesPriceMin =
+      filters.priceMin === "" || vehicle.price >= parseInt(filters.priceMin);
+    const matchesPriceMax =
+      filters.priceMax === "" || vehicle.price <= parseInt(filters.priceMax);
 
-    return matchesSearch && matchesType && matchesBrand && matchesModel && matchesColor &&
-           matchesEngine && matchesYearMin && matchesYearMax && matchesPriceMin && matchesPriceMax;
+    return (
+      matchesSearch &&
+      matchesType &&
+      matchesBrand &&
+      matchesModel &&
+      matchesColor &&
+      matchesEngine &&
+      matchesYearMin &&
+      matchesYearMax &&
+      matchesPriceMin &&
+      matchesPriceMax
+    );
   });
 
   const clearFilters = () => {
     setFilters({
-      type: '',
-      brand: '',
-      modelName: '',
-      color: '',
-      engineSize: '',
-      yearMin: '',
-      yearMax: '',
-      priceMin: '',
-      priceMax: '',
+      type: "",
+      brand: "",
+      modelName: "",
+      color: "",
+      engineSize: "",
+      yearMin: "",
+      yearMax: "",
+      priceMin: "",
+      priceMax: "",
     });
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   return (
@@ -82,14 +107,11 @@ const Home: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className={`text-4xl font-bold ${getColorClasses.gradients.primaryText}`}
-            >
-              Vehicle Sales
-            </motion.h1>
+            <div className="flex items-center space-x-4">
+              <Link to="/">
+              <img src="/logo.svg" alt="Logo" className="w-30" />
+              </Link>
+            </div>
             <div className="flex items-center space-x-4">
               <Link to="/login">
                 <motion.button
@@ -127,30 +149,54 @@ const Home: React.FC = () => {
 
             {/* View Toggle */}
             <div className="flex items-center space-x-2">
-              <span className={`text-sm font-medium ${getColorClasses.text.secondary}`}>View:</span>
+              <span
+                className={`text-sm font-medium ${getColorClasses.text.secondary}`}
+              >
+                View:
+              </span>
               <div className="flex rounded-lg border border-gray-300 dark:border-gray-600">
                 <button
-                  onClick={() => setViewMode('grid')}
+                  onClick={() => setViewMode("grid")}
                   className={`px-3 py-2 rounded-l-lg transition-colors ${
-                    viewMode === 'grid'
+                    viewMode === "grid"
                       ? `${getColorClasses.button.primary} text-white`
                       : `${getColorClasses.background.card} ${getColorClasses.text.secondary} hover:bg-gray-100 dark:hover:bg-gray-700`
                   }`}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
+                    />
                   </svg>
                 </button>
                 <button
-                  onClick={() => setViewMode('list')}
+                  onClick={() => setViewMode("list")}
                   className={`px-3 py-2 rounded-r-lg transition-colors ${
-                    viewMode === 'list'
+                    viewMode === "list"
                       ? `${getColorClasses.button.primary} text-white`
                       : `${getColorClasses.background.card} ${getColorClasses.text.secondary} hover:bg-gray-100 dark:hover:bg-gray-700`
                   }`}
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                    />
                   </svg>
                 </button>
               </div>
@@ -161,7 +207,12 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             <select
               value={filters.type}
-              onChange={(e) => setFilters(prev => ({ ...prev, type: e.target.value as VehicleType }))}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  type: e.target.value as VehicleType,
+                }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             >
               <option value="">All Types</option>
@@ -178,7 +229,9 @@ const Home: React.FC = () => {
               type="text"
               placeholder="Brand"
               value={filters.brand}
-              onChange={(e) => setFilters(prev => ({ ...prev, brand: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, brand: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -186,7 +239,9 @@ const Home: React.FC = () => {
               type="text"
               placeholder="Model"
               value={filters.modelName}
-              onChange={(e) => setFilters(prev => ({ ...prev, modelName: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, modelName: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -194,7 +249,9 @@ const Home: React.FC = () => {
               type="text"
               placeholder="Color"
               value={filters.color}
-              onChange={(e) => setFilters(prev => ({ ...prev, color: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, color: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -202,7 +259,9 @@ const Home: React.FC = () => {
               type="text"
               placeholder="Engine Size"
               value={filters.engineSize}
-              onChange={(e) => setFilters(prev => ({ ...prev, engineSize: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, engineSize: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -210,7 +269,9 @@ const Home: React.FC = () => {
               type="number"
               placeholder="Min Year"
               value={filters.yearMin}
-              onChange={(e) => setFilters(prev => ({ ...prev, yearMin: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, yearMin: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -218,7 +279,9 @@ const Home: React.FC = () => {
               type="number"
               placeholder="Max Year"
               value={filters.yearMax}
-              onChange={(e) => setFilters(prev => ({ ...prev, yearMax: e.target.value }))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, yearMax: e.target.value }))
+              }
               className={`px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
             />
 
@@ -227,14 +290,18 @@ const Home: React.FC = () => {
                 type="number"
                 placeholder="Min Price"
                 value={filters.priceMin}
-                onChange={(e) => setFilters(prev => ({ ...prev, priceMin: e.target.value }))}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, priceMin: e.target.value }))
+                }
                 className={`w-full px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
               <input
                 type="number"
                 placeholder="Max Price"
                 value={filters.priceMax}
-                onChange={(e) => setFilters(prev => ({ ...prev, priceMax: e.target.value }))}
+                onChange={(e) =>
+                  setFilters((prev) => ({ ...prev, priceMax: e.target.value }))
+                }
                 className={`w-full px-3 py-2 rounded-lg ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500`}
               />
             </div>
@@ -242,7 +309,8 @@ const Home: React.FC = () => {
 
           <div className="flex justify-between items-center mt-4">
             <span className={`text-sm ${getColorClasses.text.secondary}`}>
-              {filteredVehicles.length} vehicle{filteredVehicles.length !== 1 ? 's' : ''} found
+              {filteredVehicles.length} vehicle
+              {filteredVehicles.length !== 1 ? "s" : ""} found
             </span>
             <button
               onClick={clearFilters}
@@ -268,7 +336,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
             className={
-              viewMode === 'grid'
+              viewMode === "grid"
                 ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                 : "space-y-4"
             }
@@ -280,17 +348,17 @@ const Home: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 className={
-                  viewMode === 'grid'
+                  viewMode === "grid"
                     ? `${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl shadow-xl ${getColorClasses.border.default} border overflow-hidden hover:scale-105 transition-transform duration-300`
                     : `${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl shadow-xl ${getColorClasses.border.default} border p-6 hover:shadow-2xl transition-shadow duration-300`
                 }
               >
                 <Link to={`/vehicle/${vehicle.id}`}>
-                  {viewMode === 'grid' ? (
+                  {viewMode === "grid" ? (
                     // Grid View
                     <div className="aspect-square relative overflow-hidden rounded-xl mb-4">
                       <img
-                        src={vehicle.images[0] || '/placeholder-car.jpg'}
+                        src={vehicle.images[0] || "/placeholder-car.jpg"}
                         alt={`${vehicle.brand} ${vehicle.modelName}`}
                         className="w-full h-full object-cover"
                       />
@@ -303,7 +371,7 @@ const Home: React.FC = () => {
                     <div className="flex space-x-4">
                       <div className="w-32 h-24 flex-shrink-0 rounded-lg overflow-hidden">
                         <img
-                          src={vehicle.images[0] || '/placeholder-car.jpg'}
+                          src={vehicle.images[0] || "/placeholder-car.jpg"}
                           alt={`${vehicle.brand} ${vehicle.modelName}`}
                           className="w-full h-full object-cover"
                         />
@@ -311,14 +379,21 @@ const Home: React.FC = () => {
                       <div className="flex-1">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className={`text-lg font-bold ${getColorClasses.text.primary}`}>
+                            <h3
+                              className={`text-lg font-bold ${getColorClasses.text.primary}`}
+                            >
                               {vehicle.brand} {vehicle.modelName}
                             </h3>
-                            <p className={`text-sm ${getColorClasses.text.secondary} mt-1`}>
-                              {vehicle.year} • {vehicle.engineSize} • {vehicle.color}
+                            <p
+                              className={`text-sm ${getColorClasses.text.secondary} mt-1`}
+                            >
+                              {vehicle.year} • {vehicle.engineSize} •{" "}
+                              {vehicle.color}
                             </p>
                           </div>
-                          <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300`}>
+                          <span
+                            className={`inline-flex px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300`}
+                          >
                             {vehicle.type}
                           </span>
                         </div>
@@ -327,18 +402,26 @@ const Home: React.FC = () => {
                   )}
 
                   {/* Common content for both views */}
-                  <div className={viewMode === 'grid' ? "p-4" : "mt-4"}>
-                    <h3 className={`font-bold ${getColorClasses.text.primary} mb-2`}>
+                  <div className={viewMode === "grid" ? "p-4" : "mt-4"}>
+                    <h3
+                      className={`font-bold ${getColorClasses.text.primary} mb-2`}
+                    >
                       {vehicle.brand} {vehicle.modelName}
                     </h3>
-                    <p className={`text-sm ${getColorClasses.text.secondary} mb-3 line-clamp-2`}>
+                    <p
+                      className={`text-sm ${getColorClasses.text.secondary} mb-3 line-clamp-2`}
+                    >
                       {vehicle.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className={`text-lg font-bold ${getColorClasses.gradients.primaryText}`}>
+                      <span
+                        className={`text-lg font-bold ${getColorClasses.gradients.primaryText}`}
+                      >
                         ${vehicle.price.toLocaleString()}
                       </span>
-                      <span className={`text-sm ${getColorClasses.text.secondary}`}>
+                      <span
+                        className={`text-sm ${getColorClasses.text.secondary}`}
+                      >
                         {vehicle.year}
                       </span>
                     </div>
@@ -369,7 +452,9 @@ const Home: React.FC = () => {
                 d="M19 11H5m14-7H5a2 2 0 00-2 2v11a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2z"
               />
             </svg>
-            <h3 className={`text-lg font-medium ${getColorClasses.text.primary} mb-2`}>
+            <h3
+              className={`text-lg font-medium ${getColorClasses.text.primary} mb-2`}
+            >
               No vehicles found
             </h3>
             <p className={`text-sm ${getColorClasses.text.secondary}`}>

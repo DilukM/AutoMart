@@ -1,6 +1,15 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import {
+  BarChart,
+  CheckCircle,
+  AttachMoney,
+  TrendingUp,
+  Inventory,
+  Add,
+  People
+} from "@mui/icons-material";
 import AdminLayout from "../../../shared/components/AdminLayout";
 import { getColorClasses } from "../../../shared/styles/colors";
 
@@ -53,19 +62,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center">
               <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                <svg
-                  className="w-8 h-8 text-blue-600 dark:text-blue-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                  />
-                </svg>
+                <BarChart className="w-8 h-8 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="ml-4">
                 <p
@@ -89,19 +86,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center">
               <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900/30">
-                <svg
-                  className={`w-8 h-8 ${getColorClasses.status.success}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <CheckCircle className={`w-8 h-8 ${getColorClasses.status.success}`} />
               </div>
               <div className="ml-4">
                 <p
@@ -125,19 +110,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center">
               <div className="p-3 rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
-                <svg
-                  className={`w-8 h-8 ${getColorClasses.status.warning}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-                  />
-                </svg>
+                <AttachMoney className={`w-8 h-8 ${getColorClasses.status.warning}`} />
               </div>
               <div className="ml-4">
                 <p
@@ -161,19 +134,7 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center">
               <div className="p-3 rounded-lg bg-emerald-100 dark:bg-emerald-900/30">
-                <svg
-                  className="w-8 h-8 text-emerald-600 dark:text-emerald-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
+                <TrendingUp className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div className="ml-4">
                 <p
@@ -218,19 +179,7 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.5, delay: 0.5 }}
               >
                 <div className="flex items-center justify-center space-x-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                    />
-                  </svg>
+                  <Inventory className="w-5 h-5" />
                   <span>Vehicle Management</span>
                 </div>
               </motion.button>
@@ -246,19 +195,7 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.5, delay: 0.6 }}
               >
                 <div className="flex items-center justify-center space-x-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
+                  <Add className="w-5 h-5" />
                   <span>Add New Vehicle</span>
                 </div>
               </motion.button>
@@ -274,20 +211,8 @@ const Dashboard: React.FC = () => {
                 transition={{ duration: 0.5, delay: 0.7 }}
               >
                 <div className="flex items-center justify-center space-x-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                    />
-                  </svg>
-                  <span>View Analytics</span>
+                    <People className="w-5 h-5" />
+                  <span>User Management</span>
                 </div>
               </motion.button>
             </Link>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import { vehicleService } from "../../../shared/services/vehicleService";
 import { type Vehicle } from "../../../shared/types/common";
 import { getColorClasses } from "../../../shared/styles/colors";
@@ -55,14 +56,11 @@ const VehicleDetails: React.FC = () => {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <motion.h1
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className={`text-4xl font-bold ${getColorClasses.gradients.primaryText}`}
-              >
-                Vehicle Sales
-              </motion.h1>
+              <div className="flex items-center space-x-4">
+              <Link to="/">
+              <img src="/logo.svg" alt="Logo" className="w-30" />
+              </Link>
+            </div>
               <div className="flex items-center space-x-4">
               </div>
             </div>
@@ -90,14 +88,11 @@ const VehicleDetails: React.FC = () => {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center py-6">
-              <motion.h1
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className={`text-4xl font-bold ${getColorClasses.gradients.primaryText}`}
-              >
-                Vehicle Sales
-              </motion.h1>
+             <div className="flex items-center space-x-4">
+              <Link to="/">
+              <img src="/logo.svg" alt="Logo" className="w-30" />
+              </Link>
+            </div>
               <div className="flex items-center space-x-4">
               </div>
             </div>
@@ -128,23 +123,22 @@ const VehicleDetails: React.FC = () => {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
-            <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className={`text-4xl font-bold ${getColorClasses.gradients.primaryText}`}
-            >
-              Vehicle Sales
-            </motion.h1>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate("/")}
-                className={`${getColorClasses.button.secondary} font-medium py-2 px-4 rounded-lg`}
-              >
-                ← Back to Browse
-              </button>
-             
+           <div className="flex items-center space-x-4">
+              <Link to="/">
+              <img src="/logo.svg" alt="Logo" className="w-30" />
+              </Link>
             </div>
+            <div className="flex items-center space-x-4">
+                          <Link to="/login">
+                            <motion.button
+                              className={`${getColorClasses.button.primary} font-medium py-2 px-6 rounded-lg transition-all duration-300 transform hover:scale-105`}
+                              whileHover={{ scale: 1.05 }}
+                              whileTap={{ scale: 0.95 }}
+                            >
+                              Login
+                            </motion.button>
+                          </Link>
+                        </div>
           </div>
         </div>
       </motion.header>

@@ -2,19 +2,33 @@ import { DataSource } from "typeorm";
 import { VehicleEntity } from "../features/vehicles/infrastructure/database/entities/VehicleEntity";
 import { UserEntity } from "../features/auth/infrastructure/database/entities/UserEntity";
 
-export const AppDataSource = new DataSource({
-  type: "mysql",
-  host: process.env.DB_HOST || "localhost",
-  port: parseInt(process.env.DB_PORT || "3306"),
-  username: process.env.DB_USERNAME || "root",
-  password: process.env.DB_PASSWORD || "",
-  database: process.env.DB_DATABASE || "automart",
-  synchronize: process.env.NODE_ENV === "development",
-  logging: process.env.NODE_ENV === "development",
-  entities: [VehicleEntity, UserEntity],
-  migrations: ["src/migrations/*.ts"],
-  subscribers: ["src/subscribers/*.ts"],
-});
+// Function to create DataSource with validation
+export const createDataSource = () => {
+  // Validate required environment variables
+  const requiredEnvVars = ['DB_HOST', 'DB_PORT', 'DB_USERNAME', 'DB_PASSWORD', 'DB_DATABASE'];
+  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+  if (missingVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+  }
+
+  return new DataSource({
+    type: "mysql",
+    host: process.env.DB_HOST!,
+    port: parseInt(process.env.DB_PORT!),
+    username: process.env.DB_USERNAME!,
+    password: process.env.DB_PASSWORD!,
+    database: process.env.DB_DATABASE!,
+    synchronize: process.env.NODE_ENV === "development",
+    logging: process.env.NODE_ENV === "development",
+    entities: [VehicleEntity, UserEntity],
+    migrations: ["src/migrations/*.ts"],
+    subscribers: ["src/subscribers/*.ts"],
+  });
+};
+
+// Create DataSource instance
+export const AppDataSource = createDataSource();
 
 export const initializeDatabase = async (): Promise<void> => {
   try {
