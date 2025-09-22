@@ -179,7 +179,6 @@ const swaggerDefinition = {
           "engineSize",
           "year",
           "price",
-          "images",
         ],
         properties: {
           type: {
@@ -211,13 +210,6 @@ const swaggerDefinition = {
             type: "number",
             format: "float",
             description: "Vehicle price",
-          },
-          images: {
-            type: "array",
-            items: {
-              type: "string",
-            },
-            description: "Array of image URLs",
           },
           description: {
             type: "string",

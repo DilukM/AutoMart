@@ -1,4 +1,4 @@
-import { VehicleType } from '../../../shared/types/VehicleType';
+import { VehicleType } from "@/shared/types/VehicleType";
 export interface VehicleDescriptionData {
     type: VehicleType;
     brand: string;

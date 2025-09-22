@@ -41,9 +41,8 @@ export class CreateVehicleDTO {
   price!: number;
 
   @IsArray()
-  @ArrayMinSize(1)
   @IsString({ each: true })
-  images!: string[];
+  images?: string[];
 
   @IsString()
   @IsNotEmpty()

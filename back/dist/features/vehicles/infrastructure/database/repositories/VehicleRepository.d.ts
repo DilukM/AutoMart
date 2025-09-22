@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
-import { VehicleEntity } from '../entities/VehicleEntity';
-import { Vehicle } from '../../../domain/entities/Vehicle';
-import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchFilters, VehicleSearchResult } from '../../../domain/repositories/IVehicleRepository';
+import { Repository } from "typeorm";
+import { VehicleEntity } from "../entities/VehicleEntity";
+import { Vehicle } from "../../../domain/entities/Vehicle";
+import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchFilters, VehicleSearchResult } from "../../../domain/repositories/IVehicleRepository";
 export declare class VehicleRepository implements IVehicleRepository {
     private readonly vehicleRepository;
     constructor(vehicleRepository: Repository<VehicleEntity>);

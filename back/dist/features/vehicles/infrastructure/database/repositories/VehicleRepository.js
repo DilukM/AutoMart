@@ -12,53 +12,69 @@ class VehicleRepository {
         return this.mapEntityToDomain(savedEntity);
     }
     async findById(id) {
-        const vehicleEntity = await this.vehicleRepository.findOne({ where: { id } });
+        const vehicleEntity = await this.vehicleRepository.findOne({
+            where: { id },
+        });
         return vehicleEntity ? this.mapEntityToDomain(vehicleEntity) : null;
     }
     async findAll(filters, page = 1, limit = 10) {
-        const queryBuilder = this.vehicleRepository.createQueryBuilder('vehicle');
+        const queryBuilder = this.vehicleRepository.createQueryBuilder("vehicle");
         if (filters) {
             if (filters.type) {
-                queryBuilder.andWhere('vehicle.type = :type', { type: filters.type });
+                queryBuilder.andWhere("vehicle.type = :type", { type: filters.type });
             }
             if (filters.brand) {
-                queryBuilder.andWhere('vehicle.brand LIKE :brand', { brand: `%${filters.brand}%` });
+                queryBuilder.andWhere("vehicle.brand LIKE :brand", {
+                    brand: `%${filters.brand}%`,
+                });
             }
             if (filters.modelName) {
-                queryBuilder.andWhere('vehicle.modelName LIKE :modelName', { modelName: `%${filters.modelName}%` });
+                queryBuilder.andWhere("vehicle.modelName LIKE :modelName", {
+                    modelName: `%${filters.modelName}%`,
+                });
             }
             if (filters.color) {
-                queryBuilder.andWhere('vehicle.color = :color', { color: filters.color });
+                queryBuilder.andWhere("vehicle.color = :color", {
+                    color: filters.color,
+                });
             }
             if (filters.engineSize) {
-                queryBuilder.andWhere('vehicle.engineSize = :engineSize', { engineSize: filters.engineSize });
+                queryBuilder.andWhere("vehicle.engineSize = :engineSize", {
+                    engineSize: filters.engineSize,
+                });
             }
             if (filters.year) {
-                queryBuilder.andWhere('vehicle.year = :year', { year: filters.year });
+                queryBuilder.andWhere("vehicle.year = :year", { year: filters.year });
             }
             if (filters.minPrice) {
-                queryBuilder.andWhere('vehicle.price >= :minPrice', { minPrice: filters.minPrice });
+                queryBuilder.andWhere("vehicle.price >= :minPrice", {
+                    minPrice: filters.minPrice,
+                });
             }
             if (filters.maxPrice) {
-                queryBuilder.andWhere('vehicle.price <= :maxPrice', { maxPrice: filters.maxPrice });
+                queryBuilder.andWhere("vehicle.price <= :maxPrice", {
+                    maxPrice: filters.maxPrice,
+                });
             }
         }
         const [entities, total] = await queryBuilder
             .skip((page - 1) * limit)
             .take(limit)
             .getManyAndCount();
-        const vehicles = entities.map(entity => this.mapEntityToDomain(entity));
+        const vehicles = entities.map((entity) => this.mapEntityToDomain(entity));
         return {
             vehicles,
             total,
             page,
-            limit
+            limit,
         };
     }
     async update(id, vehicleData) {
         const updateResult = await this.vehicleRepository.update(id, vehicleData);
         if (updateResult.affected && updateResult.affected > 0) {
-            const updatedEntity = await this.vehicleRepository.findOne({ where: { id } });
+            const updatedEntity = await this.vehicleRepository.findOne({
+                where: { id },
+            });
             return updatedEntity ? this.mapEntityToDomain(updatedEntity) : null;
         }
         return null;

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateVehicleDTO = void 0;
 const class_validator_1 = require("class-validator");
-const VehicleType_1 = require("../../../../shared/types/VehicleType");
+const VehicleType_1 = require("@/shared/types/VehicleType");
 class CreateVehicleDTO {
 }
 exports.CreateVehicleDTO = CreateVehicleDTO;
@@ -53,7 +53,6 @@ __decorate([
 ], CreateVehicleDTO.prototype, "price", void 0);
 __decorate([
     (0, class_validator_1.IsArray)(),
-    (0, class_validator_1.ArrayMinSize)(1),
     (0, class_validator_1.IsString)({ each: true }),
     __metadata("design:type", Array)
 ], CreateVehicleDTO.prototype, "images", void 0);

@@ -1,39 +1,47 @@
 import { OpenAIClient } from "../../infrastructure/external/OpenAIClient";
-import { VehicleType } from "@/shared/types/VehicleType";
+import { IAIService, VehicleDescriptionData } from "./IAIService";
 
-export interface VehicleDescriptionData {
-  type: VehicleType;
-  brand: string;
-  modelName: string;
-  color: string;
-  engineSize: string;
-  year: number;
-  price: number;
-}
+// Re-export for backward compatibility
+export { VehicleDescriptionData };
 
-export class OpenAIService {
+export class OpenAIService implements IAIService {
   private openAIClient: OpenAIClient;
 
-  constructor(apiKey: string) {
+  constructor() {
+    const apiKey = process.env.OPENAI_API_KEY;
+    console.log("OpenAIService constructor called");
+    console.log("OPENAI_API_KEY exists:", !!apiKey);
+    console.log("OPENAI_API_KEY length:", apiKey ? apiKey.length : 0);
+    if (!apiKey) {
+      throw new Error('OpenAI API key not found in environment variables');
+    }
     this.openAIClient = new OpenAIClient(apiKey);
+    console.log("OpenAIService initialized successfully");
   }
 
   async generateVehicleDescription(
     vehicleData: VehicleDescriptionData
   ): Promise<string> {
     try {
+      console.log('OpenAIService: Starting to generate description for:', vehicleData);
+      
       // Convert VehicleType enum to string for the prompt
       const vehicleDataForPrompt = {
         ...vehicleData,
         type: vehicleData.type.toString(),
       };
 
+      console.log('OpenAIService: Calling OpenAI client with data:', vehicleDataForPrompt);
+
       const description = await this.openAIClient.generateVehicleDescription(
         vehicleDataForPrompt
       );
+      
+      console.log('OpenAIService: Successfully generated description from OpenAI:', description.substring(0, 100) + '...');
       return description;
     } catch (error) {
-      console.error("Error generating vehicle description:", error);
+      console.error("OpenAIService: Error generating vehicle description with OpenAI:", error);
+      console.log("OpenAIService: Falling back to predefined description");
 
       // Fallback description if OpenAI fails
       return this.generateFallbackDescription(vehicleData);
@@ -68,7 +76,7 @@ export class OpenAIService {
   }
 
   isConfigured(): boolean {
-    // Check if OpenAI API key is available
-    return !!process.env.OPENAI_API_KEY;
+    // Since the constructor throws if API key is missing, this will always return true if the service was created
+    return true;
   }
 }

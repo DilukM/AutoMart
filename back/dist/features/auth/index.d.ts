@@ -6,6 +6,6 @@ declare const userRepository: UserRepository;
 declare const authService: AuthService;
 declare const authMiddleware: AuthMiddleware;
 declare const authController: AuthController;
-declare const authRoutes: any;
-export { userRepository, authService, authMiddleware, authController, authRoutes };
+declare const authRouter: import("express").Router;
+export { userRepository, authService, authMiddleware, authController, authRouter as authRoutes };
 //# sourceMappingURL=index.d.ts.map

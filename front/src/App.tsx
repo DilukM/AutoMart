@@ -1,35 +1,71 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider, useAuth } from "./shared/hooks/AuthContext";
+import ProtectedRoute from "./shared/components/ProtectedRoute";
+import LoginPage from "./features/auth/pages/LoginPage";
+import Dashboard from "./features/admin/pages/Dashboard";
+import VehicleManagement from "./features/admin/pages/VehicleManagement";
+import VehicleDetails from "./features/admin/pages/VehicleDetails";
+import EditVehicle from "./features/admin/pages/EditVehicle";
+import AddNewVehicle from "./features/admin/pages/AddNewVehicle";
+import Settings from "./features/admin/pages/Settings";
+import Home from "./features/consumer/pages/Home";
+import ConsumerVehicleDetails from "./features/consumer/pages/VehicleDetails";
 
-function App() {
-  const [count, setCount] = useState(0)
+const AppRoutes: React.FC = () => {
+  const { isAuthenticated } = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className='text-3xl font-bold'>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+      <Route
+        path="/admin/*"
+        element={
+          <ProtectedRoute>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/vehicles" element={<VehicleManagement />} />
+              <Route path="/vehicles/:id" element={<VehicleDetails />} />
+              <Route path="/vehicles/:id/edit" element={<EditVehicle />} />
+              <Route path="/vehicles/add" element={<AddNewVehicle />} />
+              <Route path="/settings" element={<Settings />} />
+            </Routes>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/*"
+        element={
+          isAuthenticated ? (
+            <Navigate to="/admin" replace />
+          ) : (
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/vehicle/:id" element={<ConsumerVehicleDetails />} />
+            </Routes>
+          )
+        }
+      />
+    </Routes>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppRoutes />
+        <ToastContainer />
+      </Router>
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;

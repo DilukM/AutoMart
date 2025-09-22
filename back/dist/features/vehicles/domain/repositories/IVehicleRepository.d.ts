@@ -1,5 +1,5 @@
-import { Vehicle } from '../entities/Vehicle';
-import { VehicleType } from '../../../shared/types/VehicleType';
+import { Vehicle } from "../entities/Vehicle";
+import { VehicleType } from "@/shared/types/VehicleType";
 export interface CreateVehicleData {
     type: VehicleType;
     brand: string;

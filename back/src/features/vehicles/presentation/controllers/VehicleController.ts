@@ -1,17 +1,167 @@
 import { Request, Response } from "express";
 import { VehicleService } from "../../application/services/VehicleService";
+import { ImageUploadService } from "../../application/services/ImageUploadService";
+import {
+  IAIService,
+  VehicleDescriptionData,
+} from "../../application/services/IAIService";
 import { CreateVehicleDTO } from "../dto/CreateVehicleDTO";
 import { UpdateVehicleDTO } from "../dto/UpdateVehicleDTO";
 import { VehicleType } from "@/shared/types/VehicleType";
 
 export class VehicleController {
-  constructor(private readonly vehicleService: VehicleService) {}
+  constructor(
+    private readonly vehicleService: VehicleService,
+    private readonly imageUploadService: ImageUploadService,
+    private readonly aiService?: IAIService
+  ) {
+    console.log(
+      "VehicleController created with vehicleService:",
+      !!this.vehicleService
+    );
+    console.log(
+      "VehicleController created with imageUploadService:",
+      !!this.imageUploadService
+    );
+    console.log("VehicleController created with aiService:", !!this.aiService);
+
+    // Bind methods to preserve 'this' context when used as Express callbacks
+    this.createVehicle = this.createVehicle.bind(this);
+    this.getVehicleById = this.getVehicleById.bind(this);
+    this.getAllVehicles = this.getAllVehicles.bind(this);
+    this.updateVehicle = this.updateVehicle.bind(this);
+    this.deleteVehicle = this.deleteVehicle.bind(this);
+    this.generateDescription = this.generateDescription.bind(this);
+  }
 
   async createVehicle(req: Request, res: Response): Promise<void> {
     try {
-      const vehicleData: CreateVehicleDTO = req.body;
+      console.log(
+        "createVehicle called, vehicleService:",
+        !!this.vehicleService
+      );
+      console.log("Request body:", req.body);
+      console.log("Request files:", req.files);
+      console.log("Request files type:", typeof req.files);
+      console.log(
+        "Request files keys:",
+        req.files
+          ? Array.isArray(req.files)
+            ? "req.files is array"
+            : Object.keys(req.files)
+          : "req.files is null/undefined"
+      );
 
-      const vehicle = await this.vehicleService.createVehicle(vehicleData);
+      // Check all possible file field names
+      if (Array.isArray(req.files)) {
+        console.log(`Files array contains ${req.files.length} files`);
+      } else if (req.files) {
+        const possibleFields = ['images', 'files', 'photos', 'pictures'];
+        for (const field of possibleFields) {
+          if (req.files[field]) {
+            console.log(`Found files in field '${field}':`, req.files[field]);
+          }
+        }
+      }
+
+      console.log("Request headers content-type:", req.headers["content-type"]);
+      console.log("Request headers:", req.headers);
+
+      // Extract form data
+      const {
+        type,
+        brand,
+        modelName,
+        color,
+        engineSize,
+        year,
+        price,
+        description,
+      } = req.body;
+
+      console.log("Extracted data:", {
+        type,
+        brand,
+        modelName,
+        color,
+        engineSize,
+        year,
+        price,
+        description,
+      });
+
+      // Handle file uploads (multer format with upload.any())
+      let imageUrls: string[] = [];
+
+      if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+        // upload.any() puts files in an array
+        console.log(`Found ${req.files.length} files, uploading to Cloudinary...`);
+
+        const uploadPromises = req.files.map((file) =>
+          this.imageUploadService.uploadImage(
+            file as unknown as Express.Multer.File,
+            "automart"
+          )
+        );
+        imageUrls = await Promise.all(uploadPromises);
+        console.log("Images uploaded successfully:", imageUrls);
+      } else if (req.files && !Array.isArray(req.files)) {
+        // Fallback: check for specific field names (in case upload.any() didn't work as expected)
+        const possibleFields = ['images', 'files', 'photos', 'pictures'];
+
+        for (const field of possibleFields) {
+          if (req.files[field]) {
+            const files = req.files[field];
+            const fileArray = Array.isArray(files) ? files : [files];
+            console.log(`Found ${fileArray.length} files in field '${field}', uploading to Cloudinary...`);
+
+            const uploadPromises = fileArray.map((file) =>
+              this.imageUploadService.uploadImage(
+                file as unknown as Express.Multer.File,
+                "automart"
+              )
+            );
+            imageUrls = await Promise.all(uploadPromises);
+            console.log("Images uploaded successfully:", imageUrls);
+            break; // Use the first field that has files
+          }
+        }
+      } else {
+        console.log("No files found in request");
+      }
+
+      // Validate that at least one image is provided
+      if (imageUrls.length === 0) {
+        console.log("No images provided, returning error");
+        res.status(400).json({
+          success: false,
+          error: "At least one image file is required",
+        });
+        return;
+      }
+
+      console.log("Creating vehicle data object");
+      // Create vehicle data object
+      const vehicleData: CreateVehicleDTO = {
+        type: type as VehicleType,
+        brand,
+        modelName,
+        color,
+        engineSize,
+        year: parseInt(year),
+        price: parseFloat(price),
+        images: imageUrls,
+        description,
+      };
+
+      console.log("Vehicle data to create:", vehicleData);
+      console.log("Calling vehicleService.createVehicle");
+
+      const vehicle = await this.vehicleService.createVehicle(
+        vehicleData as any
+      );
+
+      console.log("Vehicle created successfully:", vehicle.id);
 
       res.status(201).json({
         success: true,
@@ -32,7 +182,8 @@ export class VehicleController {
         message: "Vehicle created successfully",
       });
     } catch (error) {
-      const statusCode = (error as any).statusCode || 400;
+      console.error("Error in createVehicle:", error);
+      const statusCode = (error as any).statusCode || 500;
       res.status(statusCode).json({
         success: false,
         error: (error as Error).message,
@@ -82,6 +233,10 @@ export class VehicleController {
 
   async getAllVehicles(req: Request, res: Response): Promise<void> {
     try {
+      console.log(
+        "getAllVehicles called, vehicleService:",
+        !!this.vehicleService
+      );
       const {
         type,
         brand,
@@ -224,50 +379,81 @@ export class VehicleController {
     }
   }
 
-  async regenerateDescription(req: Request, res: Response): Promise<void> {
+  async generateDescription(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      console.log("generateDescription called");
+      console.log("Request body:", req.body);
 
-      if (!id) {
+      // Extract vehicle details from request body
+      const { type, brand, modelName, color, engineSize, year, price } =
+        req.body;
+
+      // Validate required fields
+      if (!type || !brand || !modelName || !color || !year || !price) {
         res.status(400).json({
           success: false,
-          error: "Vehicle ID is required",
+          error:
+            "Missing required vehicle details: type, brand, modelName, color, year, and price are required",
         });
         return;
       }
 
-      const { description } = req.body;
+      console.log("Vehicle details extracted:", {
+        type,
+        brand,
+        modelName,
+        color,
+        engineSize,
+        year,
+        price,
+      });
 
-      // Description is now optional - if not provided, AI will generate one
-      if (
-        description &&
-        (typeof description !== "string" || description.trim() === "")
-      ) {
-        res.status(400).json({
+      // Check if AI service is available
+      if (!this.aiService || !this.aiService.isConfigured()) {
+        console.log("AI service not available or not configured");
+        console.log("aiService exists:", !!this.aiService);
+        if (this.aiService) {
+          console.log("isConfigured result:", this.aiService.isConfigured());
+        }
+        res.status(503).json({
           success: false,
-          error: "Description must be a non-empty string if provided",
+          error: "AI description generation service is not available",
         });
         return;
       }
 
-      const vehicle = await this.vehicleService.regenerateVehicleDescription(
-        id,
-        description
+      // Prepare data for OpenAI
+      const descriptionData: VehicleDescriptionData = {
+        type: type as VehicleType,
+        brand,
+        modelName,
+        color,
+        engineSize,
+        year: parseInt(year),
+        price: parseFloat(price),
+      };
+
+      console.log(
+        "Generating description with AI service for:",
+        descriptionData
       );
+
+      // Generate description using AI service
+      const generatedDescription =
+        await this.aiService.generateVehicleDescription(descriptionData);
+
+      console.log("Description generated successfully:", generatedDescription);
 
       res.status(200).json({
         success: true,
         data: {
-          id: vehicle!.id,
-          description: vehicle!.description,
-          updatedAt: vehicle!.updatedAt,
+          description: generatedDescription,
         },
-        message: description
-          ? "Vehicle description updated successfully"
-          : "AI-generated description created successfully",
+        message: "AI-generated description created successfully",
       });
     } catch (error) {
-      const statusCode = (error as any).statusCode || 400;
+      console.error("Error in generateDescription:", error);
+      const statusCode = (error as any).statusCode || 500;
       res.status(statusCode).json({
         success: false,
         error: (error as Error).message,

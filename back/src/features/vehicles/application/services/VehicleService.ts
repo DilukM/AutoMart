@@ -7,12 +7,12 @@ import {
   VehicleSearchResult,
 } from "../../domain/repositories/IVehicleRepository";
 import { VehicleType } from "@/shared/types/VehicleType";
-import { OpenAIService, VehicleDescriptionData } from "./OpenAIService";
+import { IAIService, VehicleDescriptionData } from "./IAIService";
 
 export class VehicleService {
   constructor(
     private readonly vehicleRepository: IVehicleRepository,
-    private readonly openAIService?: OpenAIService
+    private readonly aiService?: IAIService
   ) {}
 
   async createVehicle(vehicleData: CreateVehicleData): Promise<Vehicle> {
@@ -21,10 +21,10 @@ export class VehicleService {
 
     let description = vehicleData.description;
 
-    // Generate AI description if not provided and OpenAI service is available
+    // Generate AI description if not provided and AI service is available
     if (
       (!description || description.trim() === "") &&
-      this.openAIService?.isConfigured()
+      this.aiService?.isConfigured()
     ) {
       try {
         const descriptionData: VehicleDescriptionData = {
@@ -37,7 +37,7 @@ export class VehicleService {
           price: vehicleData.price,
         };
 
-        description = await this.openAIService.generateVehicleDescription(
+        description = await this.aiService.generateVehicleDescription(
           descriptionData
         );
         console.log("AI-generated description created for vehicle");
@@ -159,10 +159,10 @@ export class VehicleService {
 
     let newDescription = customDescription;
 
-    // Generate new AI description if no custom description provided and OpenAI is available
+    // Generate new AI description if no custom description provided and AI service is available
     if (
       (!newDescription || newDescription.trim() === "") &&
-      this.openAIService?.isConfigured()
+      this.aiService?.isConfigured()
     ) {
       try {
         const descriptionData: VehicleDescriptionData = {
@@ -175,7 +175,7 @@ export class VehicleService {
           price: existingVehicle.price,
         };
 
-        newDescription = await this.openAIService.generateVehicleDescription(
+        newDescription = await this.aiService.generateVehicleDescription(
           descriptionData
         );
         console.log("AI-generated description regenerated for vehicle");

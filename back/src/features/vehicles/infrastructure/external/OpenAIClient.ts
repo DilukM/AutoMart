@@ -19,8 +19,11 @@ export class OpenAIClient {
     price: number;
   }): Promise<string> {
     try {
+      console.log('OpenAIClient: Building prompt for vehicle data:', vehicleData);
       const prompt = this.buildDescriptionPrompt(vehicleData);
+      console.log('OpenAIClient: Generated prompt:', prompt.substring(0, 200) + '...');
 
+      console.log('OpenAIClient: Making API call to OpenAI...');
       const response = await this.client.chat.completions.create({
         model: 'gpt-3.5-turbo',
         messages: [
@@ -37,15 +40,18 @@ export class OpenAIClient {
         temperature: 0.7,
       });
 
+      console.log('OpenAIClient: Received response from OpenAI');
       const description = response.choices[0]?.message?.content?.trim();
 
       if (!description) {
+        console.error('OpenAIClient: No description in response');
         throw new Error('Failed to generate description from OpenAI');
       }
 
+      console.log('OpenAIClient: Successfully extracted description');
       return description;
     } catch (error) {
-      console.error('OpenAI API error:', error);
+      console.error('OpenAIClient: API error:', error);
       throw new Error('Failed to generate vehicle description');
     }
   }

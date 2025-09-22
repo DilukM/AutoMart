@@ -1,4 +1,4 @@
-import { VehicleType } from '../../../../shared/types/VehicleType';
+import { VehicleType } from "@/shared/types/VehicleType";
 export declare class CreateVehicleDTO {
     type: VehicleType;
     brand: string;
@@ -7,7 +7,7 @@ export declare class CreateVehicleDTO {
     engineSize: string;
     year: number;
     price: number;
-    images: string[];
+    images?: string[];
     description: string;
 }
 //# sourceMappingURL=CreateVehicleDTO.d.ts.map

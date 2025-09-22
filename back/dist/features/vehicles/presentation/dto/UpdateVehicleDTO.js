@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateVehicleDTO = void 0;
 const class_validator_1 = require("class-validator");
-const VehicleType_1 = require("../../../../shared/types/VehicleType");
+const VehicleType_1 = require("@/shared/types/VehicleType");
 class UpdateVehicleDTO {
 }
 exports.UpdateVehicleDTO = UpdateVehicleDTO;

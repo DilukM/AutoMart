@@ -15,11 +15,11 @@ let UserEntity = class UserEntity {
 };
 exports.UserEntity = UserEntity;
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
+    (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
 ], UserEntity.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 50, unique: true }),
+    (0, typeorm_1.Column)({ length: 50 }),
     __metadata("design:type", String)
 ], UserEntity.prototype, "username", void 0);
 __decorate([
@@ -35,7 +35,7 @@ __decorate([
     __metadata("design:type", Date)
 ], UserEntity.prototype, "updatedAt", void 0);
 exports.UserEntity = UserEntity = __decorate([
-    (0, typeorm_1.Entity)('users'),
-    (0, typeorm_1.Unique)(['username'])
+    (0, typeorm_1.Entity)("users"),
+    (0, typeorm_1.Unique)(["username"])
 ], UserEntity);
 //# sourceMappingURL=UserEntity.js.map

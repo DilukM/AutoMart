@@ -1,9 +1,9 @@
-import { AppDataSource } from '../config/database';
+import { AppDataSource } from '../../config/database';
 import { UserRepository } from './infrastructure/database/repositories/UserRepository';
 import { AuthService } from './application/services/AuthService';
 import { AuthMiddleware } from './infrastructure/web/middlewares/AuthMiddleware';
 import { AuthController } from './presentation/controllers/AuthController';
-import { createAuthRoutes } from './presentation/routes/authRoutes';
+import { authRoutes } from './presentation/routes/authRoutes';
 
 // Initialize repositories
 const userRepository = new UserRepository(AppDataSource.getRepository('UserEntity'));
@@ -22,12 +22,12 @@ const authMiddleware = new AuthMiddleware(authService);
 const authController = new AuthController(authService);
 
 // Initialize routes
-const authRoutes = createAuthRoutes(authController, authMiddleware);
+const authRouter = authRoutes(authController, authMiddleware);
 
 export {
   userRepository,
   authService,
   authMiddleware,
   authController,
-  authRoutes
+  authRouter as authRoutes
 };

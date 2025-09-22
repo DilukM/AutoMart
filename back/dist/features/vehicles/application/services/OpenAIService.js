@@ -10,22 +10,22 @@ class OpenAIService {
         try {
             const vehicleDataForPrompt = {
                 ...vehicleData,
-                type: vehicleData.type.toString()
+                type: vehicleData.type.toString(),
             };
             const description = await this.openAIClient.generateVehicleDescription(vehicleDataForPrompt);
             return description;
         }
         catch (error) {
-            console.error('Error generating vehicle description:', error);
+            console.error("Error generating vehicle description:", error);
             return this.generateFallbackDescription(vehicleData);
         }
     }
     generateFallbackDescription(vehicleData) {
         const { type, brand, modelName, color, engineSize, year, price } = vehicleData;
-        return `Discover this exceptional ${year} ${brand} ${modelName} in stunning ${color}. ` +
+        return (`Discover this exceptional ${year} ${brand} ${modelName} in stunning ${color}. ` +
             `Powered by a ${engineSize} engine, this ${type.toLowerCase()} offers outstanding performance and reliability. ` +
             `Priced at $${price.toLocaleString()}, it represents excellent value for money. ` +
-            `Contact us today to schedule a test drive and experience the quality and craftsmanship firsthand.`;
+            `Contact us today to schedule a test drive and experience the quality and craftsmanship firsthand.`);
     }
     async regenerateDescription(vehicleData, customPrompt) {
         if (customPrompt) {

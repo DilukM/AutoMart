@@ -1,6 +1,6 @@
-import { Vehicle } from '../../domain/entities/Vehicle';
-import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchFilters, VehicleSearchResult } from '../../domain/repositories/IVehicleRepository';
-import { OpenAIService } from './OpenAIService';
+import { Vehicle } from "../../domain/entities/Vehicle";
+import { IVehicleRepository, CreateVehicleData, UpdateVehicleData, VehicleSearchFilters, VehicleSearchResult } from "../../domain/repositories/IVehicleRepository";
+import { OpenAIService } from "./OpenAIService";
 export declare class VehicleService {
     private readonly vehicleRepository;
     private readonly openAIService?;

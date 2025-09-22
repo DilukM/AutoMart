@@ -15,6 +15,7 @@ const vehicleRoutes_1 = require("./features/vehicles/presentation/routes/vehicle
 const errorHandler_1 = require("./shared/middleware/errorHandler");
 const AuthService_1 = require("./features/auth/application/services/AuthService");
 const VehicleService_1 = require("./features/vehicles/application/services/VehicleService");
+const ImageUploadService_1 = require("./features/vehicles/application/services/ImageUploadService");
 const OpenAIService_1 = require("./features/vehicles/application/services/OpenAIService");
 const AuthController_1 = require("./features/auth/presentation/controllers/AuthController");
 const VehicleController_1 = require("./features/vehicles/presentation/controllers/VehicleController");
@@ -40,22 +41,31 @@ app.get("/health", (req, res) => {
 });
 app.use(errorHandler_1.errorHandler);
 const startServer = async () => {
+    console.log("🚀 startServer function called");
     try {
+        console.log("Starting server initialization...");
         await (0, database_1.initializeDatabase)();
+        console.log("Database initialized successfully");
         const userRepository = new UserRepository_1.UserRepository(database_1.AppDataSource.getRepository(UserEntity_1.UserEntity));
         const vehicleRepository = new VehicleRepository_1.VehicleRepository(database_1.AppDataSource.getRepository(VehicleEntity_1.VehicleEntity));
+        console.log("Repositories created");
         const authService = new AuthService_1.AuthService(userRepository, process.env.JWT_SECRET || "default-secret", process.env.JWT_EXPIRES_IN || "24h");
         const openAIService = process.env.OPENAI_API_KEY
             ? new OpenAIService_1.OpenAIService(process.env.OPENAI_API_KEY)
             : undefined;
         const vehicleService = new VehicleService_1.VehicleService(vehicleRepository, openAIService);
+        const imageUploadService = new ImageUploadService_1.ImageUploadService();
+        console.log("Services created");
         const authController = new AuthController_1.AuthController(authService);
-        const vehicleController = new VehicleController_1.VehicleController(vehicleService);
+        const vehicleController = new VehicleController_1.VehicleController(vehicleService, imageUploadService);
+        console.log("Controllers created");
         const authMiddleware = new AuthMiddleware_1.AuthMiddleware(authService);
         const authRouter = (0, authRoutes_1.authRoutes)(authController, authMiddleware);
         const vehicleRouter = (0, vehicleRoutes_1.vehicleRoutes)(vehicleController, authMiddleware);
+        console.log("Routes created");
         app.use("/api/auth", authRouter);
         app.use("/api/vehicles", vehicleRouter);
+        console.log("Routes registered");
         app.listen(PORT, () => {
             console.log(`Server is running on port ${PORT}`);
             console.log(`Environment: ${process.env.NODE_ENV || "development"}`);
