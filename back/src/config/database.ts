@@ -2,20 +2,46 @@ import { DataSource } from "typeorm";
 import { VehicleEntity } from "../features/vehicles/infrastructure/database/entities/VehicleEntity";
 import { UserEntity } from "../features/auth/infrastructure/database/entities/UserEntity";
 
+// Build minimal SSL options (CA-only) for mysql2 driver based on env
+const buildSslOptions = () => {
+  if (process.env.DB_SSL !== "true") return undefined;
+
+  const ssl: any = { rejectUnauthorized: true };
+
+  // Normalize PEM strings that may contain escaped newlines
+  const normalize = (s: string) => s.replace(/\\n/g, "\n");
+
+  if (process.env.DB_SSL_CA) ssl.ca = normalize(process.env.DB_SSL_CA);
+
+  return ssl;
+};
+
 // Function to create DataSource with validation
 export const createDataSource = () => {
   // Validate required environment variables
-  const requiredEnvVars = ['DB_HOST', 'DB_PORT', 'DB_USERNAME', 'DB_PASSWORD', 'DB_DATABASE'];
-  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  const requiredEnvVars = [
+    "DB_HOST",
+    "DB_PORT",
+    "DB_USERNAME",
+    "DB_PASSWORD",
+    "DB_DATABASE",
+  ];
+  const missingVars = requiredEnvVars.filter(
+    (varName) => !process.env[varName]
+  );
 
   if (missingVars.length > 0) {
-    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    throw new Error(
+      `Missing required environment variables: ${missingVars.join(", ")}`
+    );
   }
+
+  const ssl = buildSslOptions();
 
   return new DataSource({
     type: "mysql",
     host: process.env.DB_HOST!,
-    port: parseInt(process.env.DB_PORT!),
+    port: parseInt(process.env.DB_PORT!, 10),
     username: process.env.DB_USERNAME!,
     password: process.env.DB_PASSWORD!,
     database: process.env.DB_DATABASE!,
@@ -24,6 +50,8 @@ export const createDataSource = () => {
     entities: [VehicleEntity, UserEntity],
     migrations: ["src/migrations/*.ts"],
     subscribers: ["src/subscribers/*.ts"],
+    // Pass SSL options to the mysql2 driver when enabled
+    extra: ssl ? { ssl } : undefined,
   });
 };
 

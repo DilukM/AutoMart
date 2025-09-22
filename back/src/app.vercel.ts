@@ -79,6 +79,36 @@ app.get("/health", (req, res) => {
   });
 });
 
+// Optional: DB health endpoint to verify DB connectivity and SSL status
+app.get("/db-health", async (req, res) => {
+  try {
+    // Ensure DB is initialized
+    if (!AppDataSource.isInitialized) {
+      await initializeDatabase();
+    }
+
+    // Simple query to validate connection
+    const result = await AppDataSource.query("SELECT 1 AS ok");
+
+    res.status(200).json({
+      status: "OK",
+      dbConnected: true,
+      sslEnabled: process.env.DB_SSL === "true",
+      result,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error: any) {
+    console.error("/db-health error:", error);
+    res.status(500).json({
+      status: "ERROR",
+      dbConnected: false,
+      sslEnabled: process.env.DB_SSL === "true",
+      error: error?.message || String(error),
+      timestamp: new Date().toISOString(),
+    });
+  }
+});
+
 // Initialize database and setup routes
 let isInitialized = false;
 
@@ -166,10 +196,29 @@ const initializeApp = async () => {
   }
 };
 
-// Initialize the app
+// Lazy initialization: don't crash the serverless function on init failure
+// and defer initialization until the first non-health request.
 initializeApp().catch((error) => {
-  console.error("Application initialization failed:", error);
-  process.exit(1);
+  console.error(
+    "Application initialization failed (will retry on request):",
+    error
+  );
+  // Do NOT exit in serverless environment; health endpoint should still work
+});
+
+// Middleware to ensure initialization on demand for non-health routes
+app.use(async (req, res, next) => {
+  try {
+    if (!isInitialized && req.path !== "/health") {
+      await initializeApp();
+    }
+    next();
+  } catch (err) {
+    console.error("Initialization during request failed:", err);
+    res
+      .status(500)
+      .json({ success: false, error: "Service initialization failed" });
+  }
 });
 
 // Error handling middleware (must be last)
