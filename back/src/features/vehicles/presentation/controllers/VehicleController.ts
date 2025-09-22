@@ -167,10 +167,7 @@ export class VehicleController {
 
   async getAllVehicles(req: Request, res: Response): Promise<void> {
     try {
-      console.log(
-        "getAllVehicles called, vehicleService:",
-        !!this.vehicleService
-      );
+ 
       const {
         type,
         brand,
@@ -248,9 +245,7 @@ export class VehicleController {
         return;
       }
 
-      console.log("updateVehicle called for ID:", id);
-      console.log("Request body:", req.body);
-      console.log("Request files:", req.files);
+
 
       // Get the existing vehicle data first
       const existingVehicle = await this.vehicleService.getVehicleById(id);
@@ -269,7 +264,6 @@ export class VehicleController {
       // Handle new image uploads
       let newImageUrls: string[] = [];
       if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-        console.log(`Uploading ${req.files.length} new images...`);
         const uploadPromises = req.files.map((file) =>
           this.imageUploadService.uploadImage(
             file as unknown as Express.Multer.File,
@@ -277,7 +271,6 @@ export class VehicleController {
           )
         );
         newImageUrls = await Promise.all(uploadPromises);
-        console.log("New images uploaded successfully:", newImageUrls);
       }
 
       // Handle image management
@@ -285,7 +278,6 @@ export class VehicleController {
 
       // Remove specified images if imagesToRemove is provided
       if (vehicleData.imagesToRemove && vehicleData.imagesToRemove.length > 0) {
-        console.log("Removing images:", vehicleData.imagesToRemove);
         finalImages = finalImages.filter(
           (imageUrl) => !vehicleData.imagesToRemove!.includes(imageUrl)
         );
@@ -320,7 +312,6 @@ export class VehicleController {
       // Remove imagesToRemove from the data sent to service (it's not part of the entity)
       delete vehicleData.imagesToRemove;
 
-      console.log("Final vehicle data for update:", vehicleData);
 
       const vehicle = await this.vehicleService.updateVehicle(id, vehicleData);
 
@@ -388,8 +379,7 @@ export class VehicleController {
 
   async generateDescription(req: Request, res: Response): Promise<void> {
     try {
-      console.log("generateDescription called");
-      console.log("Request body:", req.body);
+   
 
       // Extract vehicle details from request body
       const { type, brand, modelName, color, engineSize, year, price } =
@@ -405,22 +395,12 @@ export class VehicleController {
         return;
       }
 
-      console.log("Vehicle details extracted:", {
-        type,
-        brand,
-        modelName,
-        color,
-        engineSize,
-        year,
-        price,
-      });
+
 
       // Check if AI service is available
       if (!this.aiService || !this.aiService.isConfigured()) {
-        console.log("AI service not available or not configured");
-        console.log("aiService exists:", !!this.aiService);
+
         if (this.aiService) {
-          console.log("isConfigured result:", this.aiService.isConfigured());
         }
         res.status(503).json({
           success: false,
@@ -440,16 +420,12 @@ export class VehicleController {
         price: parseFloat(price),
       };
 
-      console.log(
-        "Generating description with AI service for:",
-        descriptionData
-      );
+
 
       // Generate description using AI service
       const generatedDescription =
         await this.aiService.generateVehicleDescription(descriptionData);
 
-      console.log("Description generated successfully:", generatedDescription);
 
       res.status(200).json({
         success: true,
