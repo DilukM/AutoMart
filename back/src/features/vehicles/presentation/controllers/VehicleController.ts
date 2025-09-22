@@ -318,7 +318,75 @@ export class VehicleController {
         return;
       }
 
-      const vehicleData: UpdateVehicleDTO = req.body;
+      console.log("updateVehicle called for ID:", id);
+      console.log("Request body:", req.body);
+      console.log("Request files:", req.files);
+      
+      // Get the existing vehicle data first
+      const existingVehicle = await this.vehicleService.getVehicleById(id);
+      
+      if (!existingVehicle) {
+        res.status(404).json({
+          success: false,
+          error: "Vehicle not found",
+        });
+        return;
+      }
+
+      // Extract update data from request body
+      const vehicleData: UpdateVehicleDTO = { ...req.body };
+      
+      // Handle new image uploads
+      let newImageUrls: string[] = [];
+      if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+        console.log(`Uploading ${req.files.length} new images...`);
+        const uploadPromises = req.files.map((file) =>
+          this.imageUploadService.uploadImage(
+            file as unknown as Express.Multer.File,
+            "automart"
+          )
+        );
+        newImageUrls = await Promise.all(uploadPromises);
+        console.log("New images uploaded successfully:", newImageUrls);
+      }
+
+      // Handle image management
+      let finalImages = [...existingVehicle.images]; // Start with existing images
+
+      // Remove specified images if imagesToRemove is provided
+      if (vehicleData.imagesToRemove && vehicleData.imagesToRemove.length > 0) {
+        console.log("Removing images:", vehicleData.imagesToRemove);
+        finalImages = finalImages.filter(
+          (imageUrl) => !vehicleData.imagesToRemove!.includes(imageUrl)
+        );
+      }
+
+      // Add new images if any were uploaded
+      if (newImageUrls.length > 0) {
+        finalImages = [...finalImages, ...newImageUrls];
+      }
+
+      // If images array is explicitly provided in the request (for complete replacement)
+      if (vehicleData.images && !vehicleData.imagesToRemove && newImageUrls.length === 0) {
+        finalImages = vehicleData.images;
+      }
+
+      // Ensure we have at least one image
+      if (finalImages.length === 0) {
+        res.status(400).json({
+          success: false,
+          error: "Vehicle must have at least one image",
+        });
+        return;
+      }
+
+      // Update the vehicle data with the final images array
+      vehicleData.images = finalImages;
+      
+      // Remove imagesToRemove from the data sent to service (it's not part of the entity)
+      delete vehicleData.imagesToRemove;
+
+      console.log("Final vehicle data for update:", vehicleData);
 
       const vehicle = await this.vehicleService.updateVehicle(id, vehicleData);
 
@@ -341,6 +409,7 @@ export class VehicleController {
         message: "Vehicle updated successfully",
       });
     } catch (error) {
+      console.error("Error in updateVehicle:", error);
       const statusCode = (error as any).statusCode || 400;
       res.status(statusCode).json({
         success: false,

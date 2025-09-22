@@ -44,9 +44,13 @@ export class UpdateVehicleDTO {
 
   @IsOptional()
   @IsArray()
-  @ArrayMinSize(1)
   @IsString({ each: true })
   images?: string[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagesToRemove?: string[];
 
   @IsOptional()
   @IsString()

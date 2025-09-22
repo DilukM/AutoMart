@@ -321,6 +321,7 @@ export const vehicleRoutes = (
     "/:id",
     authMiddleware.authenticate,
     authMiddleware.requireAdmin,
+    upload.any(), // Accept any files for image uploads during update
     vehicleController.updateVehicle
   );
 
