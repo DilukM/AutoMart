@@ -183,7 +183,8 @@ const AddNewVehicle: React.FC = () => {
                     Generating AI Description
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                    Please wait while we create a description for your vehicle...
+                    Please wait while we create a description for your
+                    vehicle...
                   </p>
                 </div>
               </motion.div>

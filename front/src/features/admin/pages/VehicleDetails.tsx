@@ -57,7 +57,9 @@ const VehicleDetails: React.FC = () => {
     return (
       <AdminLayout>
         <div className="text-center py-12">
-          <h3 className={`text-lg font-medium ${getColorClasses.text.primary} mb-2`}>
+          <h3
+            className={`text-lg font-medium ${getColorClasses.text.primary} mb-2`}
+          >
             Vehicle not found
           </h3>
           <button
@@ -92,10 +94,9 @@ const VehicleDetails: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className={`text-3xl font-bold ${getColorClasses.gradients.primaryText}`}
           >
-            {vehicle.brand || 'Unknown'} {vehicle.modelName || 'Model'}
+            {vehicle.brand || "Unknown"} {vehicle.modelName || "Model"}
           </motion.h1>
           <div className="flex space-x-3">
-           
             <button
               onClick={() => navigate(`/admin/vehicles/${id}/edit`)}
               className={`${getColorClasses.button.primary} font-medium py-2 px-4 rounded-lg`}
@@ -113,7 +114,9 @@ const VehicleDetails: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className={`${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl shadow-xl p-6 ${getColorClasses.border.default} border`}
           >
-            <h2 className={`text-xl font-bold ${getColorClasses.text.primary} mb-4`}>
+            <h2
+              className={`text-xl font-bold ${getColorClasses.text.primary} mb-4`}
+            >
               Vehicle Images
             </h2>
             {vehicle.images && vehicle.images.length > 0 ? (
@@ -123,10 +126,22 @@ const VehicleDetails: React.FC = () => {
                   {imageErrors.has(vehicle.images[selectedImageIndex]) ? (
                     <div className="w-full h-full flex items-center justify-center">
                       <div className="text-center">
-                        <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        <svg
+                          className="w-16 h-16 mx-auto mb-4 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                          />
                         </svg>
-                        <p className="text-gray-500 text-lg">Failed to load image</p>
+                        <p className="text-gray-500 text-lg">
+                          Failed to load image
+                        </p>
                       </div>
                     </div>
                   ) : (
@@ -134,7 +149,9 @@ const VehicleDetails: React.FC = () => {
                       src={vehicle.images[selectedImageIndex]}
                       alt={`${vehicle.brand} ${vehicle.modelName}`}
                       className="w-full h-full object-cover"
-                      onError={() => handleImageError(vehicle.images[selectedImageIndex])}
+                      onError={() =>
+                        handleImageError(vehicle.images[selectedImageIndex])
+                      }
                       onLoad={() => handleImageLoad()}
                       crossOrigin="anonymous"
                     />
@@ -192,88 +209,129 @@ const VehicleDetails: React.FC = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className={`${getColorClasses.background.glass} backdrop-blur-lg rounded-2xl shadow-xl p-6 ${getColorClasses.border.default} border`}
           >
-            <h2 className={`text-xl font-bold ${getColorClasses.text.primary} mb-6`}>
+            <h2
+              className={`text-xl font-bold ${getColorClasses.text.primary} mb-6`}
+            >
               Vehicle Details
             </h2>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Type
                   </label>
                   <span
                     className={`inline-flex px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300`}
                   >
-                    {vehicle.type || 'Unknown'}
+                    {vehicle.type || "Unknown"}
                   </span>
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Year
                   </label>
-                  <span className={`text-sm font-medium ${getColorClasses.text.primary}`}>
-                    {vehicle.year || 'N/A'}
+                  <span
+                    className={`text-sm font-medium ${getColorClasses.text.primary}`}
+                  >
+                    {vehicle.year || "N/A"}
                   </span>
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Brand
                   </label>
-                  <span className={`text-sm font-medium ${getColorClasses.text.primary}`}>
-                    {vehicle.brand || 'Unknown'}
+                  <span
+                    className={`text-sm font-medium ${getColorClasses.text.primary}`}
+                  >
+                    {vehicle.brand || "Unknown"}
                   </span>
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Model
                   </label>
-                  <span className={`text-sm font-medium ${getColorClasses.text.primary}`}>
-                    {vehicle.modelName || 'Unknown'}
+                  <span
+                    className={`text-sm font-medium ${getColorClasses.text.primary}`}
+                  >
+                    {vehicle.modelName || "Unknown"}
                   </span>
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Engine Size
                   </label>
-                  <span className={`text-sm font-medium ${getColorClasses.text.primary}`}>
-                    {vehicle.engineSize || 'N/A'}
+                  <span
+                    className={`text-sm font-medium ${getColorClasses.text.primary}`}
+                  >
+                    {vehicle.engineSize || "N/A"}
                   </span>
                 </div>
                 <div>
-                  <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                  <label
+                    className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                  >
                     Color
                   </label>
                   <div className="flex items-center">
                     <div
                       className="w-4 h-4 rounded-full mr-2 border border-gray-300"
-                      style={{ backgroundColor: vehicle.color ? vehicle.color.toLowerCase() : '#ccc' }}
+                      style={{
+                        backgroundColor: vehicle.color
+                          ? vehicle.color.toLowerCase()
+                          : "#ccc",
+                      }}
                     ></div>
-                    <span className={`text-sm font-medium ${getColorClasses.text.primary}`}>
-                      {vehicle.color || 'Not specified'}
+                    <span
+                      className={`text-sm font-medium ${getColorClasses.text.primary}`}
+                    >
+                      {vehicle.color || "Not specified"}
                     </span>
                   </div>
                 </div>
               </div>
               <div>
-                <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}>
+                <label
+                  className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-1`}
+                >
                   Price
                 </label>
-                <span className={`text-2xl font-bold ${getColorClasses.gradients.primaryText}`}>
-                  ${vehicle.price ? vehicle.price.toLocaleString() : '0'}
+                <span
+                  className={`text-2xl font-bold ${getColorClasses.gradients.primaryText}`}
+                >
+                  ${vehicle.price ? vehicle.price.toLocaleString() : "0"}
                 </span>
               </div>
               <div>
-                <label className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-2`}>
+                <label
+                  className={`block text-sm font-medium ${getColorClasses.text.secondary} mb-2`}
+                >
                   Description
                 </label>
-                <p className={`${getColorClasses.text.primary} leading-relaxed`}>
-                  {vehicle.description || 'No description available.'}
+                <p
+                  className={`${getColorClasses.text.primary} leading-relaxed`}
+                >
+                  {vehicle.description || "No description available."}
                 </p>
               </div>
               <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
                 <div className="text-xs text-gray-500 dark:text-gray-400">
-                  <p>Created: {new Date(vehicle.createdAt).toLocaleDateString()}</p>
-                  <p>Last Updated: {new Date(vehicle.updatedAt).toLocaleDateString()}</p>
+                  <p>
+                    Created: {new Date(vehicle.createdAt).toLocaleDateString()}
+                  </p>
+                  <p>
+                    Last Updated:{" "}
+                    {new Date(vehicle.updatedAt).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
             </div>

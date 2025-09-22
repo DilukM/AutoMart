@@ -26,7 +26,9 @@ class VehicleService {
     return response.data?.data || response.data || response;
   }
 
-  async createVehicle(vehicle: CreateVehicleRequest | FormData): Promise<Vehicle> {
+  async createVehicle(
+    vehicle: CreateVehicleRequest | FormData
+  ): Promise<Vehicle> {
     return apiClient.post<Vehicle>("/api/vehicles", vehicle);
   }
 

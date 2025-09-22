@@ -47,8 +47,7 @@ const LoginPage: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="absolute top-4 right-4"
-      >
-      </motion.div>
+      ></motion.div>
 
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}

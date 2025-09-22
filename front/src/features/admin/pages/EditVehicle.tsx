@@ -116,7 +116,11 @@ const EditVehicle: React.FC = () => {
     try {
       // Simulate AI description generation
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      const aiDescription = `This ${formData.year} ${formData.brand} ${formData.modelName} is a premium ${formData.type.toLowerCase()} that combines style, performance, and reliability. This ${formData.color.toLowerCase()} vehicle features a ${formData.engineSize} engine. Perfect for those seeking quality and dependability in their next vehicle.`;
+      const aiDescription = `This ${formData.year} ${formData.brand} ${
+        formData.modelName
+      } is a premium ${formData.type.toLowerCase()} that combines style, performance, and reliability. This ${formData.color.toLowerCase()} vehicle features a ${
+        formData.engineSize
+      } engine. Perfect for those seeking quality and dependability in their next vehicle.`;
 
       setFormData((prev) => ({ ...prev, description: aiDescription }));
     } catch (error) {
@@ -234,7 +238,9 @@ const EditVehicle: React.FC = () => {
                 </label>
                 <select
                   value={formData.type}
-                  onChange={(e) => handleInputChange("type", e.target.value as VehicleType)}
+                  onChange={(e) =>
+                    handleInputChange("type", e.target.value as VehicleType)
+                  }
                   className={`w-full px-4 py-3 rounded-xl ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300`}
                 >
                   <option value="Car">Car</option>
@@ -344,7 +350,9 @@ const EditVehicle: React.FC = () => {
                 <input
                   type="text"
                   value={formData.engineSize}
-                  onChange={(e) => handleInputChange("engineSize", e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("engineSize", e.target.value)
+                  }
                   className={`w-full px-4 py-3 rounded-xl ${getColorClasses.background.card} ${getColorClasses.border.default} border ${getColorClasses.text.primary} focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300`}
                   placeholder="e.g., 2.0L"
                   required
@@ -421,16 +429,30 @@ const EditVehicle: React.FC = () => {
                     return (
                       <div key={index} className="relative group">
                         {hasError ? (
-                          <div className={`w-full h-24 rounded-lg border-2 flex items-center justify-center ${
-                            isMarkedForRemoval
-                              ? "border-red-500 opacity-50 bg-red-50 dark:bg-red-900/20"
-                              : "border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800"
-                          }`}>
+                          <div
+                            className={`w-full h-24 rounded-lg border-2 flex items-center justify-center ${
+                              isMarkedForRemoval
+                                ? "border-red-500 opacity-50 bg-red-50 dark:bg-red-900/20"
+                                : "border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800"
+                            }`}
+                          >
                             <div className="text-center">
-                              <svg className="w-8 h-8 mx-auto mb-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                              <svg
+                                className="w-8 h-8 mx-auto mb-1 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+                                />
                               </svg>
-                              <p className="text-xs text-gray-500">Failed to load</p>
+                              <p className="text-xs text-gray-500">
+                                Failed to load
+                              </p>
                             </div>
                           </div>
                         ) : (
@@ -477,10 +499,13 @@ const EditVehicle: React.FC = () => {
                 </div>
                 <div className="mb-4">
                   <p className={`text-sm ${getColorClasses.text.secondary}`}>
-                    Click "Remove" to mark images for deletion. You can add new images below.
+                    Click "Remove" to mark images for deletion. You can add new
+                    images below.
                   </p>
                   {imagesToRemove.length > 0 && (
-                    <p className={`text-sm text-red-600 dark:text-red-400 mt-1`}>
+                    <p
+                      className={`text-sm text-red-600 dark:text-red-400 mt-1`}
+                    >
                       {imagesToRemove.length} image(s) marked for removal
                     </p>
                   )}

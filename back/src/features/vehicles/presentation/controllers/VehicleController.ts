@@ -251,10 +251,10 @@ export class VehicleController {
       console.log("updateVehicle called for ID:", id);
       console.log("Request body:", req.body);
       console.log("Request files:", req.files);
-      
+
       // Get the existing vehicle data first
       const existingVehicle = await this.vehicleService.getVehicleById(id);
-      
+
       if (!existingVehicle) {
         res.status(404).json({
           success: false,
@@ -265,7 +265,7 @@ export class VehicleController {
 
       // Extract update data from request body
       const vehicleData: UpdateVehicleDTO = { ...req.body };
-      
+
       // Handle new image uploads
       let newImageUrls: string[] = [];
       if (req.files && Array.isArray(req.files) && req.files.length > 0) {
@@ -297,7 +297,11 @@ export class VehicleController {
       }
 
       // If images array is explicitly provided in the request (for complete replacement)
-      if (vehicleData.images && !vehicleData.imagesToRemove && newImageUrls.length === 0) {
+      if (
+        vehicleData.images &&
+        !vehicleData.imagesToRemove &&
+        newImageUrls.length === 0
+      ) {
         finalImages = vehicleData.images;
       }
 
@@ -312,7 +316,7 @@ export class VehicleController {
 
       // Update the vehicle data with the final images array
       vehicleData.images = finalImages;
-      
+
       // Remove imagesToRemove from the data sent to service (it's not part of the entity)
       delete vehicleData.imagesToRemove;
 
