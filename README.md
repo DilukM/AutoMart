@@ -2,7 +2,7 @@
 
 A full-stack web application for managing vehicle sales with AI-powered description generation, built with React, Node.js, TypeScript, and MySQL.
 
-Demo Link: https://automart-front.vercel.app/[https://automart-front.vercel.app/]
+Demo Link: https://automart-front.vercel.app/
 
 ## 🌟 Features
 
