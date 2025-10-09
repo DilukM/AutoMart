@@ -42,6 +42,9 @@ export class VehicleEntity {
   @Column({ type: "text" })
   description!: string;
 
+  @Column({ type: "boolean", default: false })
+  isFeatured!: boolean;
+
   @CreateDateColumn()
   createdAt!: Date;
 

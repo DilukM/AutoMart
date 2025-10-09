@@ -4,6 +4,8 @@ import {
   IsNumber,
   IsArray,
   IsNotEmpty,
+  IsOptional,
+  IsBoolean,
   Min,
   Max,
   ArrayMinSize,
@@ -47,4 +49,8 @@ export class CreateVehicleDTO {
   @IsString()
   @IsNotEmpty()
   description!: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isFeatured?: boolean;
 }

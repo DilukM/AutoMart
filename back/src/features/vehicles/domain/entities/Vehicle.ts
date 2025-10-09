@@ -12,6 +12,7 @@ export class Vehicle {
     public readonly price: number,
     public readonly images: string[],
     public readonly description: string,
+    public readonly isFeatured: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -25,7 +26,8 @@ export class Vehicle {
     year: number,
     price: number,
     images: string[],
-    description: string
+    description: string,
+    isFeatured: boolean = false
   ): Vehicle {
     const id = crypto.randomUUID();
     const now = new Date();
@@ -40,6 +42,7 @@ export class Vehicle {
       price,
       images,
       description,
+      isFeatured,
       now,
       now
     );
@@ -54,7 +57,8 @@ export class Vehicle {
     year?: number,
     price?: number,
     images?: string[],
-    description?: string
+    description?: string,
+    isFeatured?: boolean
   ): Vehicle {
     return new Vehicle(
       this.id,
@@ -67,6 +71,7 @@ export class Vehicle {
       price ?? this.price,
       images ?? this.images,
       description ?? this.description,
+      isFeatured ?? this.isFeatured,
       this.createdAt,
       new Date()
     );

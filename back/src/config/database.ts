@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 import { VehicleEntity } from "../features/vehicles/infrastructure/database/entities/VehicleEntity";
 import { UserEntity } from "../features/auth/infrastructure/database/entities/UserEntity";
 
-// Build minimal SSL options (CA-only) for mysql2 driver based on env
+// Build minimal SSL options (CA) for mysql2 driver
 const buildSslOptions = () => {
   if (process.env.DB_SSL !== "true") return undefined;
 

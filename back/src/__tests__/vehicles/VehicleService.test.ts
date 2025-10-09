@@ -30,6 +30,7 @@ describe("VehicleService", () => {
     price: 25000,
     images: ["http://img.url/a.jpg"],
     description: "Nice car",
+    isFeatured: false,
   };
 
   it("creates a vehicle", async () => {

@@ -83,7 +83,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="h-full w-full p-6 overflow-hidden"
+              className="h-full w-full overflow-hidden"
             >
               {children}
             </motion.div>

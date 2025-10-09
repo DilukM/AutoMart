@@ -36,6 +36,7 @@ export class VehicleController {
         year,
         price,
         description,
+        isFeatured,
       } = req.body;
 
       // Handle file uploads (multer format with upload.any())
@@ -91,6 +92,7 @@ export class VehicleController {
         price: parseFloat(price),
         images: imageUrls,
         description,
+        isFeatured: isFeatured === 'true' || isFeatured === true,
       };
 
       const vehicle = await this.vehicleService.createVehicle(
@@ -110,6 +112,7 @@ export class VehicleController {
           price: vehicle.price,
           images: vehicle.images,
           description: vehicle.description,
+          isFeatured: vehicle.isFeatured,
           createdAt: vehicle.createdAt,
           updatedAt: vehicle.updatedAt,
         },
@@ -152,6 +155,7 @@ export class VehicleController {
           price: vehicle!.price,
           images: vehicle!.images,
           description: vehicle!.description,
+          isFeatured: vehicle!.isFeatured,
           createdAt: vehicle!.createdAt,
           updatedAt: vehicle!.updatedAt,
         },
@@ -177,6 +181,7 @@ export class VehicleController {
         yearMax,
         minPrice,
         maxPrice,
+        isFeatured,
         page = "1",
         limit = "10",
       } = req.query;
@@ -191,6 +196,7 @@ export class VehicleController {
       if (yearMax) filters.yearMax = parseInt(yearMax as string); 
       if (minPrice) filters.minPrice = parseFloat(minPrice as string);
       if (maxPrice) filters.maxPrice = parseFloat(maxPrice as string);
+      if (isFeatured !== undefined) filters.isFeatured = isFeatured === 'true';
 
       const pageNum = parseInt(page as string);
       const limitNum = parseInt(limit as string);
@@ -215,6 +221,7 @@ export class VehicleController {
             price: vehicle.price,
             images: vehicle.images,
             description: vehicle.description,
+            isFeatured: vehicle.isFeatured,
             createdAt: vehicle.createdAt,
             updatedAt: vehicle.updatedAt,
           })),
@@ -326,6 +333,7 @@ export class VehicleController {
           price: vehicle!.price,
           images: vehicle!.images,
           description: vehicle!.description,
+          isFeatured: vehicle!.isFeatured,
           createdAt: vehicle!.createdAt,
           updatedAt: vehicle!.updatedAt,
         },

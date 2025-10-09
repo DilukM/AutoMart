@@ -80,9 +80,16 @@ export class VehicleRepository implements IVehicleRepository {
           maxPrice: filters.maxPrice,
         });
       }
+      if (filters.isFeatured !== undefined) {
+        queryBuilder.andWhere("vehicle.isFeatured = :isFeatured", {
+          isFeatured: filters.isFeatured,
+        });
+      }
     }
 
     const [entities, total] = await queryBuilder
+      .orderBy("vehicle.isFeatured", "DESC")
+      .addOrderBy("vehicle.createdAt", "DESC")
       .skip((page - 1) * limit)
       .take(limit)
       .getManyAndCount();
@@ -133,6 +140,7 @@ export class VehicleRepository implements IVehicleRepository {
       entity.price,
       entity.images,
       entity.description,
+      entity.isFeatured,
       entity.createdAt,
       entity.updatedAt
     );

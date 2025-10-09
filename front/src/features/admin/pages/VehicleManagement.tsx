@@ -95,7 +95,7 @@ const VehicleManagement: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="flex flex-col h-screen w-full max-w-full overflow-hidden space-y-4"
+        className="flex flex-col h-screen w-full max-w-full p-8 overflow-hidden space-y-4"
       >
         {/* Page Header */}
         <motion.div

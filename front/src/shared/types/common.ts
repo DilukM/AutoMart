@@ -11,6 +11,7 @@ export interface Vehicle {
   price: number;
   images: string[];
   description: string;
+  isFeatured: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -42,6 +43,7 @@ export interface CreateVehicleRequest {
   price: number;
   images: File[];
   description?: string; // Will be generated if not provided
+  isFeatured?: boolean;
 }
 
 export interface UpdateVehicleRequest extends Partial<CreateVehicleRequest> {

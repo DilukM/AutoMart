@@ -59,7 +59,8 @@ export class VehicleService {
       vehicleData.year,
       vehicleData.price,
       vehicleData.images,
-      description
+      description,
+      vehicleData.isFeatured || false
     );
 
     return await this.vehicleRepository.create({
@@ -72,6 +73,7 @@ export class VehicleService {
       price: vehicle.price,
       images: vehicle.images,
       description: vehicle.description,
+      isFeatured: vehicle.isFeatured,
     });
   }
 

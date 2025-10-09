@@ -36,7 +36,6 @@ export class AuthMiddleware {
 
   requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
     // For now, all authenticated users are considered admins
-    // In a more complex system, you might check user roles
     if (!req.user) {
       res.status(401).json({
         success: false,

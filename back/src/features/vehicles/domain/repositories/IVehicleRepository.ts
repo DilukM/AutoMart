@@ -11,6 +11,7 @@ export interface CreateVehicleData {
   price: number;
   images: string[];
   description: string;
+  isFeatured?: boolean;
 }
 
 export interface UpdateVehicleData {
@@ -23,6 +24,7 @@ export interface UpdateVehicleData {
   price?: number;
   images?: string[];
   description?: string;
+  isFeatured?: boolean;
 }
 
 export interface VehicleSearchFilters {
@@ -36,6 +38,7 @@ export interface VehicleSearchFilters {
   yearMax?: number;
   minPrice?: number;
   maxPrice?: number;
+  isFeatured?: boolean;
 }
 
 export interface VehicleSearchResult {
