@@ -26,6 +26,7 @@
     "exactOptionalPropertyTypes": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "types": ["jest", "node"],
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"],
@@ -36,5 +37,5 @@
     }
   },
   "include": ["src/**/*", "src/index.ts"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
+  "exclude": ["node_modules", "dist"]
 }

@@ -47,10 +47,12 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
         (filters.year ? v.year === filters.year : true) &&
         (filters.minPrice ? v.price >= filters.minPrice : true) &&
         (filters.maxPrice ? v.price <= filters.maxPrice : true) &&
-        (filters.isFeatured !== undefined ? v.isFeatured === filters.isFeatured : true)
+        (filters.isFeatured !== undefined
+          ? v.isFeatured === filters.isFeatured
+          : true)
       );
     });
-    
+
     // Sort by isFeatured first (featured vehicles on top), then by createdAt
     list.sort((a, b) => {
       if (a.isFeatured !== b.isFeatured) {
@@ -58,7 +60,7 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
       }
       return b.createdAt.getTime() - a.createdAt.getTime(); // Newest first
     });
-    
+
     const total = list.length;
     const start = (page - 1) * limit;
     const vehicles = list.slice(start, start + limit);

@@ -8,7 +8,7 @@ import { AppDataSource } from "../config/database";
 async function addIsFeaturedColumn() {
   try {
     await AppDataSource.initialize();
-    
+
     const queryRunner = AppDataSource.createQueryRunner();
     await queryRunner.connect();
 
@@ -25,7 +25,7 @@ async function addIsFeaturedColumn() {
         ALTER TABLE vehicles 
         ADD COLUMN isFeatured BOOLEAN DEFAULT FALSE
       `);
-      
+
       console.log("Successfully added isFeatured column to vehicles table");
     } else {
       console.log("isFeatured column already exists");

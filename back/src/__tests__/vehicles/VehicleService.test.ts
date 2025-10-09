@@ -63,4 +63,53 @@ describe("VehicleService", () => {
     const ok = await service.deleteVehicle(v.id);
     expect(ok).toBe(true);
   });
+
+  it("orders featured vehicles first", async () => {
+    // Create a regular vehicle first
+    const regularVehicle = await service.createVehicle({
+      ...baseData,
+      brand: "Honda",
+      isFeatured: false,
+    });
+
+    // Create a featured vehicle second (should appear first despite being created later)
+    const featuredVehicle = await service.createVehicle({
+      ...baseData,
+      brand: "BMW",
+      isFeatured: true,
+    });
+
+    // Get all vehicles
+    const result = await service.getAllVehicles();
+
+    // Should have 2 vehicles
+    expect(result.vehicles).toHaveLength(2);
+
+    // Featured vehicle should be first
+    expect(result.vehicles[0]!.id).toBe(featuredVehicle.id);
+    expect(result.vehicles[0]!.isFeatured).toBe(true);
+    expect(result.vehicles[1]!.id).toBe(regularVehicle.id);
+    expect(result.vehicles[1]!.isFeatured).toBe(false);
+  });
+
+  it("filters featured vehicles", async () => {
+    // Create one featured and one regular vehicle
+    await service.createVehicle({
+      ...baseData,
+      brand: "Honda",
+      isFeatured: false,
+    });
+    const featuredVehicle = await service.createVehicle({
+      ...baseData,
+      brand: "BMW",
+      isFeatured: true,
+    });
+
+    // Filter for featured vehicles only
+    const result = await service.getAllVehicles({ isFeatured: true });
+
+    expect(result.vehicles).toHaveLength(1);
+    expect(result.vehicles[0]!.id).toBe(featuredVehicle.id);
+    expect(result.vehicles[0]!.isFeatured).toBe(true);
+  });
 });
