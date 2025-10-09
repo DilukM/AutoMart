@@ -11,6 +11,7 @@
     "dev:nodemon": "nodemon",
     "seed:admin": "ts-node -r tsconfig-paths/register src/scripts/seedAdmin.ts",
     "seed:vehicles": "ts-node -r tsconfig-paths/register src/scripts/seedVehicles.ts",
+    "migrate:featured": "ts-node -r tsconfig-paths/register src/scripts/addIsFeaturedColumn.ts",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"

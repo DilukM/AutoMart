@@ -20,7 +20,8 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
       data.year,
       data.price,
       data.images,
-      data.description
+      data.description,
+      data.isFeatured || false
     );
     this.vehicles.set(v.id, v);
     return v;
@@ -45,9 +46,19 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
         (filters.engineSize ? v.engineSize === filters.engineSize : true) &&
         (filters.year ? v.year === filters.year : true) &&
         (filters.minPrice ? v.price >= filters.minPrice : true) &&
-        (filters.maxPrice ? v.price <= filters.maxPrice : true)
+        (filters.maxPrice ? v.price <= filters.maxPrice : true) &&
+        (filters.isFeatured !== undefined ? v.isFeatured === filters.isFeatured : true)
       );
     });
+    
+    // Sort by isFeatured first (featured vehicles on top), then by createdAt
+    list.sort((a, b) => {
+      if (a.isFeatured !== b.isFeatured) {
+        return b.isFeatured ? 1 : -1; // Featured vehicles first
+      }
+      return b.createdAt.getTime() - a.createdAt.getTime(); // Newest first
+    });
+    
     const total = list.length;
     const start = (page - 1) * limit;
     const vehicles = list.slice(start, start + limit);
@@ -66,7 +77,8 @@ export class InMemoryVehicleRepository implements IVehicleRepository {
       data.year,
       data.price,
       data.images,
-      data.description
+      data.description,
+      data.isFeatured
     );
     this.vehicles.set(id, updated);
     return updated;

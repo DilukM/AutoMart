@@ -92,7 +92,7 @@ export class VehicleController {
         price: parseFloat(price),
         images: imageUrls,
         description,
-        isFeatured: isFeatured === 'true' || isFeatured === true,
+        isFeatured: isFeatured === "true" || isFeatured === true,
       };
 
       const vehicle = await this.vehicleService.createVehicle(
@@ -192,11 +192,11 @@ export class VehicleController {
       if (modelName) filters.modelName = modelName as string;
       if (color) filters.color = color as string;
       if (engineSize) filters.engineSize = engineSize as string;
-      if (yearMin) filters.yearMin = parseInt(yearMin as string);  
-      if (yearMax) filters.yearMax = parseInt(yearMax as string); 
+      if (yearMin) filters.yearMin = parseInt(yearMin as string);
+      if (yearMax) filters.yearMax = parseInt(yearMax as string);
       if (minPrice) filters.minPrice = parseFloat(minPrice as string);
       if (maxPrice) filters.maxPrice = parseFloat(maxPrice as string);
-      if (isFeatured !== undefined) filters.isFeatured = isFeatured === 'true';
+      if (isFeatured !== undefined) filters.isFeatured = isFeatured === "true";
 
       const pageNum = parseInt(page as string);
       const limitNum = parseInt(limit as string);
